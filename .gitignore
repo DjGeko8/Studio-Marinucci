@@ -12,13 +12,17 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
-# Fotografie provvisorie: NON vanno nel repository.
-# Una di esse è un'anteprima Adobe Stock non licenziata, con il watermark
-# dell'autore ancora impresso: pubblicarla su un repository remoto sarebbe una
-# ridistribuzione di materiale su cui non abbiamo diritti. Le altre sono immagini
-# sintetiche che non ritraggono il professionista.
-# Si rigenerano con: npm run prepara-provvisorie
-public/immagini/*-PROVVISORIA*
+# Foto del castello: è un'anteprima Adobe Stock NON licenziata, con il watermark
+# dell'autore ancora impresso. Versionarla e servirla online sarebbe ridistribuzione
+# di materiale su cui non abbiamo diritti — cosa diversa dal tenerla in locale per
+# valutare un'impaginazione. Al suo posto il sito mostra il segnaposto grafico.
+# Si rigenera con: npm run prepara-provvisorie
+public/immagini/hero-termoli-PROVVISORIA*
+
+# Le altre provvisorie SONO versionate: sono immagini sintetiche, senza diritti di
+# terzi, e servono a far vedere il sito completo in anteprima. Portano tutte la
+# fascia impressa «PROVVISORIA — NON PUBBLICABILE», e `npm run verifica-immagini`
+# blocca comunque il go-live finché restano in uso.
 
 # Skill Cloudflare per gli assistenti di sviluppo: strumenti di lavoro, non parte
 # del sito. Si reinstallano con:

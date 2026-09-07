@@ -214,6 +214,12 @@ npm run verifica-immagini
 esce con errore finché ne resta una in uso. `npm run verifica` esegue insieme questo
 controllo e quello sui dati mancanti.
 
+Le provvisorie **sono versionate**, così l'anteprima online mostra il sito completo.
+L'unica esclusa è la foto del castello: è un'anteprima Adobe Stock non licenziata, e
+servirla da un sito pubblico sarebbe ridistribuzione. Al suo posto compare il segnaposto
+grafico — il componente `Foto` verifica che il file esista davvero e, se manca, ripiega
+sul rettangolo invece di lasciare un'immagine rotta.
+
 > ⚠️ **Lo strumento non toglie mai il watermark di una banca immagini.** Un ritaglio che
 > lo facesse sparire produrrebbe una copia pulita di materiale non licenziato. Quando una
 > provvisoria proviene da un'anteprima a pagamento, il watermark originale resta dov'è e

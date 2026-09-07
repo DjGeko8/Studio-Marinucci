@@ -1,5 +1,6 @@
 import { ImagePlaceholder, cx } from '@/components/ui'
 import { fotografia, type SlotFoto } from '@/content/immagini'
+import { filePubblicoEsiste } from '@/lib/file-pubblici'
 
 /**
  * Fotografia del sito.
@@ -39,7 +40,10 @@ export function Foto({
 }) {
   const foto = fotografia(slot)
 
-  if (!foto) {
+  // Registrata ma con il file assente: si torna al segnaposto. Meglio un rettangolo
+  // onesto di un'icona di immagine spezzata — succede con le foto escluse dal
+  // versionamento, come l'anteprima stock non licenziata del castello.
+  if (!foto || !filePubblicoEsiste(foto.src)) {
     return (
       <ImagePlaceholder
         label={etichetta}
