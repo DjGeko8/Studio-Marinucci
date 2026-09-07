@@ -31,6 +31,23 @@ export const site = {
     'Dott. Massimo Marinucci, dottore commercialista e revisore legale a Termoli. Consulenza fiscale, contabile e societaria per imprese, professionisti e famiglie del basso Molise.',
 } as const
 
+/**
+ * Il sito è ancora un'anteprima?
+ *
+ * Si deduce dal dominio: finché `site.url` punta al segnaposto `.invalid`, il
+ * dominio definitivo non è stato registrato e quindi quello che si sta guardando
+ * è un'anteprima — tipicamente su un indirizzo *.workers.dev.
+ *
+ * In quel caso il sito chiede ai motori di ricerca di NON indicizzarlo. Serve a
+ * evitare che finiscano nei risultati di ricerca pagine con i segnaposto «TBD»
+ * ancora visibili, fotografie marchiate come provvisorie e testi non ancora
+ * validati dal professionista.
+ *
+ * Non c'è nulla da configurare e nulla da ricordarsi: il giorno in cui si scrive
+ * il dominio vero in `site.url`, l'indicizzazione si riattiva da sola.
+ */
+export const inAnteprima = site.url.endsWith('.invalid')
+
 export const professionista = {
   nome: 'Massimo Marinucci',
   nomeCompleto: 'Dott. Massimo Marinucci',

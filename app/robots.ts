@@ -1,8 +1,13 @@
 import type { MetadataRoute } from 'next'
 
-import { site } from '@/lib/site'
+import { inAnteprima, site } from '@/lib/site'
 
 export default function robots(): MetadataRoute.Robots {
+  // Anteprima senza dominio definitivo: si chiude tutto. Vedi lib/site.ts.
+  if (inAnteprima) {
+    return { rules: [{ userAgent: '*', disallow: '/' }] }
+  }
+
   return {
     rules: [
       {

@@ -5,7 +5,7 @@ import { CookieBanner } from '@/components/CookieBanner'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { JsonLdProfessionista, JsonLdStudio } from '@/components/JsonLd'
-import { site } from '@/lib/site'
+import { inAnteprima, site } from '@/lib/site'
 
 import './globals.css'
 
@@ -60,7 +60,10 @@ export const metadata: Metadata = {
     title: `${site.name} — Dottore Commercialista a Termoli`,
     description: site.description,
   },
-  robots: { index: true, follow: true },
+  // Vedi `inAnteprima` in lib/site.ts: niente indicizzazione finché manca il dominio.
+  robots: inAnteprima
+    ? { index: false, follow: false, nocache: true }
+    : { index: true, follow: true },
   alternates: { canonical: '/' },
 }
 
