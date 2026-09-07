@@ -5,17 +5,17 @@
   "scripts": {
     "dev": "next dev -p 8320",
     "build": "next build --webpack",
+    "postbuild": "opennextjs-cloudflare build --skipNextBuild",
     "build:turbopack": "next build",
     "start": "next start -p 8320",
     "typecheck": "tsc --noEmit",
+    "verifica": "npm run verifica-segnaposto && npm run verifica-immagini",
     "verifica-segnaposto": "node scripts/verifica-segnaposto.mjs",
-    "cf:build": "opennextjs-cloudflare build",
+    "verifica-immagini": "node scripts/verifica-immagini.mjs",
+    "prepara-provvisorie": "python scripts/prepara-provvisorie.py",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
-    "cf:tipi": "wrangler types",
-    "verifica-immagini": "node scripts/verifica-immagini.mjs",
-    "verifica": "npm run verifica-segnaposto && npm run verifica-immagini",
-    "prepara-provvisorie": "python scripts/prepara-provvisorie.py"
+    "cf:tipi": "wrangler types"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

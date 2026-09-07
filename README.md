@@ -272,13 +272,23 @@ raccomandata da Cloudflare per Next.js. Tutta la configurazione sta in due file:
 ### Comandi
 
 ```bash
-npm run cf:build     # compila il sito per Workers
+npm run build        # compila il sito E il pacchetto per Workers
 npm run cf:preview   # lo esegue in locale nel runtime vero di Cloudflare
 npm run cf:deploy    # pubblica
 npm run cf:tipi      # rigenera i tipi dei binding dopo aver toccato wrangler.jsonc
 ```
 
-`npm run dev` resta il modo normale di lavorare tutti i giorni: è più veloce. `cf:preview`
+`npm run build` fa entrambe le cose: `next build` produce il sito, e subito dopo npm
+esegue da solo lo script `postbuild`, che ne ricava il pacchetto per Cloudflare.
+
+> **Perche' e' fatto cosi'.** La pubblicazione automatica di Cloudflare esegue
+> `npm run build` per convenzione. Se il pacchetto per Workers si producesse con un
+> comando separato, bisognerebbe ricordarsi di configurarlo nel pannello — e alla prima
+> dimenticanza il deploy fallirebbe con «Could not find compiled Open Next config».
+> Legandolo a `postbuild`, il repository funziona con le impostazioni predefinite di
+> qualunque sistema di pubblicazione.
+
+`npm run dev` resta il modo normale di lavorare tutti i giorni. `cf:preview`
 serve prima di pubblicare, perché il runtime di Cloudflare non è Node.js e qualcosa può
 comportarsi diversamente.
 

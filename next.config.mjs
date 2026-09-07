@@ -43,6 +43,12 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Richiesto dall'adattatore OpenNext, che parte da `.next/standalone`.
+  // Va dichiarato qui e non lasciato iniettare all'adattatore: cosi' `npm run build`
+  // produce lo stesso risultato ovunque, e la pubblicazione automatica non dipende
+  // da come e' configurato il comando di build nel pannello Cloudflare.
+  output: 'standalone',
+
   pageExtensions: ['ts', 'tsx', 'mdx'],
   poweredByHeader: false,
   images: {
