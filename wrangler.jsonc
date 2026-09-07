@@ -1,0 +1,57 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  // Configurazione per la pubblicazione su Cloudflare Workers tramite OpenNext.
+  // Vedi README, sezione «Pubblicare su Cloudflare».
+
+  "name": "studio-marinucci",
+  "main": ".open-next/worker.js",
+
+  // Data di compatibilità del runtime: NON abbassarla. Alzarla in futuro va fatto
+  // consapevolmente, perché cambia il comportamento del runtime.
+  "compatibility_date": "2026-09-01",
+
+  // Richiesto da OpenNext: abilita le API Node.js usate da Next.js.
+  "compatibility_flags": ["nodejs_compat"],
+
+  // File statici generati dalla compilazione. Le 28 pagine del sito sono qui:
+  // il Worker interviene solo per la ricezione dei moduli.
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // ── Invio email ────────────────────────────────────────────────────────────
+  // Cloudflare Email Service: il modulo di contatto spedisce da qui, senza chiavi
+  // API e senza fornitori terzi.
+  //
+  // PRIMA DEL PRIMO INVIO il dominio va abilitato una sola volta:
+  //   npx wrangler email sending enable IL-TUO-DOMINIO.it
+  //
+  // In sviluppo locale, "remote": true fa transitare gli invii dal servizio vero.
+  // Lasciarlo attivo significa spedire email reali anche da locale: tienilo spento
+  // finché non stai collaudando proprio l'invio.
+  "send_email": [{ "name": "EMAIL" }],
+
+  "vars": {
+    // Destinatario delle richieste dal sito. «TBD:EMAIL» — sostituire con la
+    // casella reale dello studio prima della pubblicazione.
+    "MAIL_DESTINATARIO": "",
+    // Mittente tecnico. Deve appartenere al dominio abilitato all'invio.
+    "MAIL_MITTENTE": ""
+  },
+
+  // Il dominio si collega dopo il primo deploy, quando la zona è attiva su
+  // Cloudflare. Fino ad allora il sito risponde sull'indirizzo *.workers.dev.
+  //
+  // "routes": [
+  //   { "pattern": "IL-TUO-DOMINIO.it", "custom_domain": true },
+  //   { "pattern": "www.IL-TUO-DOMINIO.it", "custom_domain": true }
+  // ],
+
+  "workers_dev": true
+}

@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Compensa l'header fisso quando si atterra su un'ancora. */
+    scroll-padding-top: 7rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans text-body antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Focus sempre visibile: parte del pubblico naviga da tastiera. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-petrolio-600 ring-offset-2 ring-offset-paper;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-ink;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Selezione discreta, coerente con la palette. */
+  ::selection {
+    @apply bg-petrolio-100 text-petrolio-900;
+  }
+}
+
+@layer components {
+  /* Sopratitolo in maiuscoletto spaziato — ripreso da Sonato, unico vezzo. */
+  .eyebrow {
+    @apply font-sans text-eyebrow uppercase text-petrolio-600;
+  }
+
+  /* Filetto sottile: separa senza riquadri né ombre. */
+  .rule {
+    @apply h-px w-full bg-line;
+  }
+
+  /* Link nel corpo del testo: sottolineatura discreta che si rinforza al passaggio. */
+  .link {
+    @apply text-petrolio-700 underline decoration-petrolio-300 underline-offset-4
+           transition-colors hover:text-petrolio-900 hover:decoration-petrolio-600;
+  }
+
+  /* Salta al contenuto: visibile solo da tastiera. */
+  .skip-link {
+    @apply absolute left-4 top-4 z-50 -translate-y-24 rounded bg-petrolio-800 px-4 py-2
+           text-body-sm text-paper transition-transform focus:translate-y-0;
+  }
+}

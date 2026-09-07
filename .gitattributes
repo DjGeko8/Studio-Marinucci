@@ -1,0 +1,8 @@
+# Fine riga normalizzate a LF nel repository: il progetto si compila anche
+# su Linux (dove conviene fare i deploy: OpenNext non e pienamente compatibile
+# con Windows) e i diff restano puliti fra macchine diverse.
+* text=auto eol=lf
+
+*.woff2 binary
+*.jpg binary
+*.png binary

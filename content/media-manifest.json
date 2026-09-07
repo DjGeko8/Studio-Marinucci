@@ -1,0 +1,105 @@
+{
+  "nota": "Elenco degli spazi fotografici del sito. Ogni voce corrisponde a un segnaposto visibile nelle pagine. Sostituire un'immagine deve significare sostituire un file: il nome indicato in 'file' è quello atteso in /public/immagini/.",
+  "regoleInderogabili": [
+    "Ritratti del professionista: mai generati né pesantemente ritoccati con AI. Rappresentare una persona reale con un'immagine sintetica su un sito che deve trasmettere affidabilità è autolesionistico.",
+    "Ambienti dello studio: mai generati. Mostrare uffici che non esistono è pubblicità ingannevole.",
+    "Nessun collaboratore inesistente: la pagina team si crea solo se ci sono persone reali.",
+    "Fotografie di Termoli: servizio commissionato oppure acquisto con licenza. Mai prelevate dal web senza diritti."
+  ],
+  "formati": {
+    "consegna": "Originali non compressi (JPEG qualità massima o TIFF). La conversione in AVIF/WebP e il ridimensionamento sono automatici.",
+    "colore": "sRGB",
+    "metadati": "Rimuovere i dati di geolocalizzazione dagli EXIF prima della consegna."
+  },
+  "slot": [
+    {
+      "id": "hero-termoli",
+      "pagina": "/",
+      "ruolo": "Apertura della home, a piena larghezza",
+      "proporzioni": "16:9 o più panoramica",
+      "risoluzioneMinima": "2400×1350",
+      "file": "termoli-hero.jpg",
+      "alt": "Il borgo antico di Termoli visto dal mare al tramonto",
+      "notaDiRipresa": "Borgo antico, Castello Svevo, trabucchi, porto o scalinata sul mare. Orizzontale, ampio respiro, luce di prima mattina o tardo pomeriggio. Il testo va sovrapposto in basso a sinistra: lasciare quella zona leggibile, evitando dettagli affollati.",
+      "stato": "provvisoria"
+    },
+    {
+      "id": "ritratto-verticale",
+      "pagina": "/",
+      "ruolo": "Blocco «Il professionista» in home",
+      "proporzioni": "3:4",
+      "risoluzioneMinima": "1200×1600",
+      "file": "marinucci-ritratto-verticale.jpg",
+      "alt": "Ritratto del Dott. Massimo Marinucci",
+      "notaDiRipresa": "Luce naturale, sguardo in camera, sfondo pulito o lo studio stesso. È l'elemento che costruisce fiducia più di qualunque testo: vale un fotografo, non uno scatto di circostanza.",
+      "stato": "provvisoria"
+    },
+    {
+      "id": "ritratto-orizzontale",
+      "pagina": "/studio",
+      "ruolo": "Apertura della pagina Lo studio",
+      "proporzioni": "4:3",
+      "risoluzioneMinima": "1600×1200",
+      "file": "marinucci-ritratto-orizzontale.jpg",
+      "alt": "Il Dott. Massimo Marinucci nel suo studio a Termoli",
+      "notaDiRipresa": "Stessa sessione del ritratto verticale, posa diversa. Va bene una posa meno frontale, alla scrivania o al tavolo riunioni.",
+      "stato": "provvisoria"
+    },
+    {
+      "id": "studio-ingresso",
+      "pagina": "/dove-siamo",
+      "ruolo": "Riconoscere lo studio all'arrivo",
+      "proporzioni": "4:3",
+      "risoluzioneMinima": "1600×1200",
+      "file": "studio-ingresso.jpg",
+      "alt": "Ingresso dello studio in Via Madonna delle Grazie a Termoli",
+      "notaDiRipresa": "Ingresso e insegna, inquadrati come li vede chi arriva a piedi. Ha una funzione pratica oltre che estetica: aiuta a trovare fisicamente lo studio.",
+      "stato": "provvisoria"
+    },
+    {
+      "id": "studio-sala-attesa",
+      "pagina": "/studio",
+      "ruolo": "Ambiente",
+      "proporzioni": "4:3",
+      "risoluzioneMinima": "1600×1200",
+      "file": "studio-sala-attesa.jpg",
+      "alt": "Sala d'attesa dello studio",
+      "notaDiRipresa": "Deve sembrare uno studio vero, non un rendering. Nessun documento leggibile nell'inquadratura.",
+      "stato": "facoltativo"
+    },
+    {
+      "id": "studio-tavolo-riunioni",
+      "pagina": "/studio",
+      "ruolo": "Ambiente",
+      "proporzioni": "4:3",
+      "risoluzioneMinima": "1600×1200",
+      "file": "studio-tavolo-riunioni.jpg",
+      "alt": "Tavolo riunioni dello studio",
+      "notaDiRipresa": "Nessun documento leggibile, nessun nome di cliente visibile su faldoni o schermi: è un obbligo di riservatezza, non una preferenza estetica.",
+      "stato": "provvisoria"
+    }
+  ],
+  "videoFacoltativi": [
+    {
+      "id": "video-presentazione",
+      "durata": "60-90 secondi",
+      "pagina": "/ oppure /studio",
+      "nota": "Il professionista si presenta, dice come lavora e a chi si rivolge. Luce buona, audio pulito, sguardo in camera. Su un servizio fiduciario vale più di mille parole scritte. Servono sottotitoli.",
+      "priorita": 1
+    },
+    {
+      "id": "video-hero",
+      "durata": "10-15 secondi in loop",
+      "pagina": "/",
+      "nota": "Termoli dall'alto o dal mare, senza audio, con immagine di ripiego. Massimo 3 MB. Deve rispettare prefers-reduced-motion: chi ha chiesto meno animazioni vede l'immagine fissa.",
+      "priorita": 2
+    },
+    {
+      "id": "video-come-arrivare",
+      "durata": "20 secondi",
+      "pagina": "/dove-siamo",
+      "nota": "Percorso dall'ultimo punto riconoscibile all'ingresso. Banale, ma utile dove il parcheggio è un problema.",
+      "priorita": 3
+    }
+  ]
+}

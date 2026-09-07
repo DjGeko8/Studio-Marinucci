@@ -1,0 +1,28 @@
+node_modules/
+.next/
+out/
+build/
+.open-next/
+.wrangler/
+worker-configuration.d.ts
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+Thumbs.db
+
+# Fotografie provvisorie: NON vanno nel repository.
+# Una di esse è un'anteprima Adobe Stock non licenziata, con il watermark
+# dell'autore ancora impresso: pubblicarla su un repository remoto sarebbe una
+# ridistribuzione di materiale su cui non abbiamo diritti. Le altre sono immagini
+# sintetiche che non ritraggono il professionista.
+# Si rigenerano con: npm run prepara-provvisorie
+public/immagini/*-PROVVISORIA*
+
+# Skill Cloudflare per gli assistenti di sviluppo: strumenti di lavoro, non parte
+# del sito. Si reinstallano con:
+#   npx -y skills add cloudflare/skills --skill '*' --yes
+# Se preferisci che chi clona il repository le trovi già pronte, togli queste righe.
+.agents/
+.claude/skills/
