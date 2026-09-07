@@ -12,17 +12,13 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
-# Foto del castello: è un'anteprima Adobe Stock NON licenziata, con il watermark
-# dell'autore ancora impresso. Versionarla e servirla online sarebbe ridistribuzione
-# di materiale su cui non abbiamo diritti — cosa diversa dal tenerla in locale per
-# valutare un'impaginazione. Al suo posto il sito mostra il segnaposto grafico.
-# Si rigenera con: npm run prepara-provvisorie
-public/immagini/hero-termoli-PROVVISORIA*
-
-# Le altre provvisorie SONO versionate: sono immagini sintetiche, senza diritti di
-# terzi, e servono a far vedere il sito completo in anteprima. Portano tutte la
-# fascia impressa «PROVVISORIA — NON PUBBLICABILE», e `npm run verifica-immagini`
-# blocca comunque il go-live finché restano in uso.
+# Le fotografie provvisorie SONO versionate, per far vedere il sito completo in
+# anteprima. Portano tutte la fascia impressa «PROVVISORIA — NON PUBBLICABILE» e
+# `npm run verifica-immagini` blocca il go-live finché restano in uso.
+#
+# Fra queste c'è un'anteprima stock non licenziata (il castello), tenuta con il
+# watermark dell'autore intatto: serve a valutare l'impaginazione e va sostituita
+# con una fotografia licenziata o commissionata prima della pubblicazione.
 
 # Skill Cloudflare per gli assistenti di sviluppo: strumenti di lavoro, non parte
 # del sito. Si reinstallano con:
