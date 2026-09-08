@@ -166,7 +166,7 @@ Lo `slug` deve essere identico al nome del file, senza `.mdx`.
 | Cosa | Dove |
 |---|---|
 | Nome, indirizzo, telefono, email, PEC, orari, partita IVA | `lib/site.ts` |
-| Aree di attività: titoli, descrizioni, domande frequenti | `content/servizi.ts` |
+| Aree di attività: titoli, descrizioni, domande frequenti | la console, oppure `content/dati/servizi.json` |
 | Scadenze e articoli | la console in `/admin`, oppure `content/dati/` |
 | Testi della home | `app/(sito)/page.tsx` |
 | Testo della pagina «Lo studio» | `app/(sito)/studio/page.tsx` |
@@ -181,7 +181,11 @@ parola contiene un apostrofo va scritta come `l&apos;anno` anziché `l'anno`.
 
 ## Aggiungere o togliere un'area di attività
 
-**File:** `content/servizi.ts`
+**Il modo normale è la console: `/admin` → Aree di attività.** Titolo, sintesi,
+paragrafi e domande frequenti si compilano nei moduli; le frecce a sinistra spostano
+un'area su e giù.
+
+Chi preferisce i file può modificare `content/dati/servizi.json`.
 
 ⚠️ **Un'area elencata genera richieste.** Vanno indicate solo le attività effettivamente
 prestate: un servizio non prestato ma pubblicizzato è una dichiarazione ingannevole.

@@ -12,6 +12,12 @@ const SEZIONI = [
       'Le date da pubblicare sul sito, con il tipo di contribuente che riguardano. È la pagina che porta più visite ricorrenti: tenerla aggiornata è la cosa a più alto rendimento di tutto il sito.',
   },
   {
+    href: '/admin/servizi',
+    titolo: 'Aree di attività',
+    testo:
+      'Di cosa si occupa lo studio. Un’area elencata genera richieste: vanno indicate solo le attività effettivamente prestate. L’ordine conta — le prime sei compaiono in home.',
+  },
+  {
     href: '/admin/articoli',
     titolo: 'Approfondimenti',
     testo:

@@ -8,6 +8,7 @@ import { cx } from '@/components/ui'
 const SEZIONI = [
   { href: '/admin', label: 'Riepilogo' },
   { href: '/admin/scadenze', label: 'Scadenzario' },
+  { href: '/admin/servizi', label: 'Aree di attività' },
   { href: '/admin/articoli', label: 'Approfondimenti' },
 ]
 
