@@ -1,5 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises'
-import { join, normalize, sep } from 'node:path'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { dirname, join, normalize, sep } from 'node:path'
 
 /**
  * Lettura e scrittura dei file di contenuto.
@@ -122,6 +122,104 @@ export async function leggiDocumento(percorso: string): Promise<Documento> {
     throw new Error(`Percorso fuori da content/: ${percorso}`)
   }
   return { contenuto: await readFile(assoluto, 'utf8'), versione: null }
+}
+
+/**
+ * Scrive più file in UN SOLO commit, tramite l'API Git di GitHub.
+ *
+ * Serve perché alcune cose sono fatte di più file: un articolo è i suoi metadati
+ * più il testo. Scrivendoli con due chiamate separate si otterrebbero due commit,
+ * due ricompilazioni e — peggio — un istante in cui il sito ha i metadati di un
+ * articolo il cui testo non esiste ancora, e la compilazione fallisce.
+ *
+ * Il procedimento è quello di git: si creano gli oggetti (blob), si costruisce
+ * l'albero a partire da quello attuale, si crea il commit, si sposta il ramo.
+ */
+export async function scriviDocumenti(
+  /** `contenuto: null` significa «elimina questo file». */
+  file: { percorso: string; contenuto: string | null }[],
+  messaggio: string,
+): Promise<{ modalita: ModalitaArchivio }> {
+  for (const f of file) {
+    if (!percorsoAmmesso(f.percorso)) throw new Error(`Percorso non ammesso: ${f.percorso}`)
+  }
+
+  const cfg = configurazioneGitHub()
+  if (!cfg) {
+    // In locale non c'è nulla da raggruppare: si scrive e basta.
+    for (const f of file) {
+      const assoluto = join(process.cwd(), normalize(f.percorso))
+      if (!assoluto.startsWith(join(process.cwd(), 'content') + sep)) {
+        throw new Error(`Percorso fuori da content/: ${f.percorso}`)
+      }
+      if (f.contenuto === null) {
+        await rm(assoluto, { force: true })
+      } else {
+        await mkdir(dirname(assoluto), { recursive: true })
+        await writeFile(assoluto, f.contenuto, 'utf8')
+      }
+    }
+    return { modalita: 'locale' }
+  }
+
+  const base = `https://api.github.com/repos/${cfg.proprietario}/${cfg.repository}`
+  const intestazioni = {
+    Authorization: `Bearer ${cfg.token}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'User-Agent': 'studio-marinucci-console',
+    'Content-Type': 'application/json',
+  }
+
+  async function chiedi(percorso: string, init?: RequestInit): Promise<Record<string, unknown>> {
+    const risposta = await fetch(`${base}${percorso}`, { ...init, headers: intestazioni })
+    if (!risposta.ok) {
+      throw new Error(`GitHub ha risposto ${risposta.status} su ${percorso}`)
+    }
+    return (await risposta.json()) as Record<string, unknown>
+  }
+
+  // 1. dov'è ora il ramo
+  const riferimento = await chiedi(`/git/ref/heads/${encodeURIComponent(cfg.ramo)}`)
+  const commitAttuale = (riferimento.object as { sha: string }).sha
+  const commit = await chiedi(`/git/commits/${commitAttuale}`)
+  const alberoAttuale = (commit.tree as { sha: string }).sha
+
+  // 2. un oggetto per ogni file
+  const voci = await Promise.all(
+    file.map(async (f) => {
+      // In un albero git, `sha: null` su un percorso significa rimuoverlo.
+      if (f.contenuto === null) {
+        return { path: f.percorso, mode: '100644' as const, type: 'blob' as const, sha: null }
+      }
+      const blob = await chiedi('/git/blobs', {
+        method: 'POST',
+        body: JSON.stringify({ content: f.contenuto, encoding: 'utf-8' }),
+      })
+      return {
+        path: f.percorso,
+        mode: '100644' as const,
+        type: 'blob' as const,
+        sha: blob.sha as string,
+      }
+    }),
+  )
+
+  // 3. il nuovo albero, 4. il commit, 5. lo spostamento del ramo
+  const albero = await chiedi('/git/trees', {
+    method: 'POST',
+    body: JSON.stringify({ base_tree: alberoAttuale, tree: voci }),
+  })
+  const nuovoCommit = await chiedi('/git/commits', {
+    method: 'POST',
+    body: JSON.stringify({ message: messaggio, tree: albero.sha, parents: [commitAttuale] }),
+  })
+  await chiedi(`/git/refs/heads/${encodeURIComponent(cfg.ramo)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ sha: nuovoCommit.sha }),
+  })
+
+  return { modalita: 'github' }
 }
 
 export async function scriviDocumento(

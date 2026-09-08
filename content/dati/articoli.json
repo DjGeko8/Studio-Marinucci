@@ -1,0 +1,29 @@
+{
+  "_nota": "Metadati degli approfondimenti. Il testo di ciascuno sta in content/news/<slug>.mdx. Modificabili dalla console in /admin, che scrive metadati e testo in un solo commit. Ogni articolo pubblicato impegna la responsabilità professionale di chi lo firma: va validato prima di andare online.",
+  "articoli": [
+    {
+      "slug": "regime-forfettario-oltre-la-soglia",
+      "titolo": "Regime forfettario: cosa succede davvero quando si supera la soglia",
+      "data": "2026-07-15",
+      "sommario": "Superare il limite di ricavi non produce lo stesso effetto in ogni caso: cambia tutto a seconda di quanto si supera e di quando ce se ne accorge. Una ricognizione delle conseguenze pratiche.",
+      "servizio": "professionisti-e-forfettari",
+      "lettura": 6
+    },
+    {
+      "slug": "dichiarazione-di-successione",
+      "titolo": "Dichiarazione di successione: tempi, documenti, errori frequenti",
+      "data": "2026-05-20",
+      "sommario": "Dodici mesi sembrano molti, ma la raccolta dei documenti ne consuma buona parte. Cosa serve, in quale ordine, e i punti su cui si perde più tempo.",
+      "servizio": "persone-fisiche",
+      "lettura": 7
+    },
+    {
+      "slug": "adeguati-assetti-piccola-impresa",
+      "titolo": "Adeguati assetti: cosa cambia concretamente per una piccola impresa",
+      "data": "2026-03-10",
+      "sommario": "L'obbligo esiste anche per le realtà minori, ma non richiede la struttura di una grande azienda. Cosa significa in pratica, con un metro proporzionato.",
+      "servizio": "crisi-di-impresa",
+      "lettura": 6
+    }
+  ]
+}

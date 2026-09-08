@@ -100,6 +100,21 @@ chiaro invece di pubblicare una pagina rotta.
 
 ## Aggiungere un articolo
 
+**Il modo normale è la console: `/admin` → Approfondimenti → «Scrivi un nuovo
+articolo».** Titolo, data, sommario e testo si compilano nei moduli; l'indirizzo della
+pagina si compone da solo dal titolo. Testo e informazioni vengono salvati insieme, in
+un unico commit: non esiste un momento in cui un articolo risulta pubblicato ma senza
+contenuto.
+
+Il testo si scrive in Markdown: una riga vuota separa i paragrafi, `## Titolo` fa un
+titolo di sezione, `**parola**` mette in grassetto, `- voce` fa un elenco.
+
+> ⚠️ **L'indirizzo di un articolo già pubblicato non va cambiato.** Chi lo aveva
+> salvato o collegato troverebbe una pagina inesistente, e il posizionamento acquisito
+> si perde. Per questo la console lo blocca dopo il primo salvataggio.
+
+### A mano, senza console
+
 Servono **due passaggi**.
 
 **1. Scrivere il testo.** Creare un file in `content/news/` chiamato come l'indirizzo che
@@ -124,18 +139,18 @@ si scrive il testo tra parentesi quadre e l'indirizzo tra parentesi tonde.
 Non serve ripetere la nota informativa in fondo: viene aggiunta automaticamente a ogni
 articolo.
 
-**2. Registrarlo.** Aprire `content/news/index.ts` e aggiungere una voce in cima
+**2. Registrarlo.** Aprire `content/dati/articoli.json` e aggiungere una voce in cima
 all'elenco:
 
-```ts
+```json
 {
-  slug: 'nuova-detrazione-2027',
-  titolo: 'Il titolo che comparirà in pagina',
-  data: '2027-01-20',
-  sommario: 'Due o tre righe che compaiono nell’elenco e nei risultati di ricerca.',
-  servizio: 'persone-fisiche',
-  lettura: 5,
-},
+  "slug": "nuova-detrazione-2027",
+  "titolo": "Il titolo che comparirà in pagina",
+  "data": "2027-01-20",
+  "sommario": "Due o tre righe che compaiono nell'elenco e nei risultati di ricerca.",
+  "servizio": "persone-fisiche",
+  "lettura": 5
+}
 ```
 
 Lo `slug` deve essere identico al nome del file, senza `.mdx`.
@@ -152,6 +167,7 @@ Lo `slug` deve essere identico al nome del file, senza `.mdx`.
 |---|---|
 | Nome, indirizzo, telefono, email, PEC, orari, partita IVA | `lib/site.ts` |
 | Aree di attività: titoli, descrizioni, domande frequenti | `content/servizi.ts` |
+| Scadenze e articoli | la console in `/admin`, oppure `content/dati/` |
 | Testi della home | `app/(sito)/page.tsx` |
 | Testo della pagina «Lo studio» | `app/(sito)/studio/page.tsx` |
 | Informativa privacy | `app/(sito)/privacy/page.tsx` |
