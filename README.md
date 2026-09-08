@@ -313,6 +313,26 @@ Fine-grained*, dando accesso **solo a questo repository** e il permesso
 Senza queste variabili la console si dichiara non configurata e non lascia entrare
 nessuno — che è il modo giusto di sbagliare.
 
+### ⚠️ Non pubblicare mai dal proprio computer con un `.env.local` attivo
+
+L'adattatore OpenNext copia dentro il pacchetto le variabili d'ambiente presenti al
+momento della compilazione — **compreso il contenuto di `.env.local`**. Chi compilasse
+in locale e poi lanciasse `cf:deploy` pubblicherebbe la propria password dentro il
+Worker, dove per giunta avrebbe la precedenza sui Secret impostati nel pannello. Il
+sito continuerebbe a funzionare: è il tipo di errore che non si nota finché non è
+tardi.
+
+Non succede quando compila Cloudflare, perché `.env.local` non è nel repository. Ma
+«di solito non succede» non è una difesa, quindi `npm run cf:deploy` esegue prima un
+controllo che si rifiuta di pubblicare se trova segreti nel pacchetto. Per verificarlo
+a mano:
+
+```bash
+npm run verifica-segreti
+```
+
+Se blocca, basta spostare `.env.local`, rifare `npm run build` e ripubblicare.
+
 ### In sviluppo
 
 In locale, senza `GITHUB_TOKEN`, la console scrive direttamente sui file del

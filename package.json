@@ -14,9 +14,10 @@
     "verifica-immagini": "node scripts/verifica-immagini.mjs",
     "prepara-provvisorie": "python scripts/prepara-provvisorie.py",
     "cf:preview": "opennextjs-cloudflare preview",
-    "cf:deploy": "opennextjs-cloudflare deploy",
+    "cf:deploy": "node scripts/verifica-segreti.mjs && opennextjs-cloudflare deploy",
     "cf:tipi": "wrangler types",
-    "admin:password": "node scripts/crea-password.mjs"
+    "admin:password": "node scripts/crea-password.mjs",
+    "verifica-segreti": "node scripts/verifica-segreti.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
