@@ -13,8 +13,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        // /showcase è la pagina interna del design system, /api non è contenuto.
-        disallow: ['/showcase', '/api/'],
+        // /showcase è la pagina interna del design system, /admin è la console,
+        // /api non è contenuto.
+        disallow: ['/showcase', '/admin', '/api/'],
       },
     ],
     sitemap: `${site.url}/sitemap.xml`,

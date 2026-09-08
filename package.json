@@ -15,7 +15,8 @@
     "prepara-provvisorie": "python scripts/prepara-provvisorie.py",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
-    "cf:tipi": "wrangler types"
+    "cf:tipi": "wrangler types",
+    "admin:password": "node scripts/crea-password.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

@@ -7,7 +7,15 @@ import { Header } from '@/components/Header'
 import { JsonLdProfessionista, JsonLdStudio } from '@/components/JsonLd'
 import { inAnteprima, site } from '@/lib/site'
 
-import './globals.css'
+import '../globals.css'
+
+/**
+ * Layout del sito pubblico.
+ *
+ * Il sito ha due radici: questa e `app/(console)/layout.tsx`. La console non
+ * eredita barra dei contatti, navigazione, footer e banner dei cookie, che
+ * servono a chi visita il sito e non a chi ci lavora dentro.
+ */
 
 /**
  * FONT SELF-HOSTED
@@ -24,9 +32,9 @@ import './globals.css'
  */
 const spectral = localFont({
   src: [
-    { path: './fonts/spectral-latin-400-normal.woff2', weight: '400', style: 'normal' },
-    { path: './fonts/spectral-latin-500-normal.woff2', weight: '500', style: 'normal' },
-    { path: './fonts/spectral-latin-600-normal.woff2', weight: '600', style: 'normal' },
+    { path: '../fonts/spectral-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: '../fonts/spectral-latin-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: '../fonts/spectral-latin-600-normal.woff2', weight: '600', style: 'normal' },
   ],
   display: 'swap',
   variable: '--font-serif',
@@ -35,9 +43,9 @@ const spectral = localFont({
 
 const inter = localFont({
   src: [
-    { path: './fonts/inter-latin-400-normal.woff2', weight: '400', style: 'normal' },
-    { path: './fonts/inter-latin-500-normal.woff2', weight: '500', style: 'normal' },
-    { path: './fonts/inter-latin-600-normal.woff2', weight: '600', style: 'normal' },
+    { path: '../fonts/inter-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: '../fonts/inter-latin-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: '../fonts/inter-latin-600-normal.woff2', weight: '600', style: 'normal' },
   ],
   display: 'swap',
   variable: '--font-sans',

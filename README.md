@@ -60,33 +60,38 @@ npm run build
 
 ## Aggiornare lo scadenzario fiscale
 
-**File da modificare:** `content/scadenze.ts`
+**Il modo normale è la console: `/admin` → Scadenzario fiscale.** Si modifica dai
+moduli, si preme «Salva e pubblica», e il sito si aggiorna in un minuto o due.
 
 È la pagina che porta più visite ricorrenti: tenerla aggiornata è la cosa a più alto
 rendimento di tutto il sito.
 
-Ogni scadenza è un blocco fatto così:
+Chi preferisce i file può modificare direttamente `content/dati/scadenze.json`. Ogni
+scadenza è un blocco fatto così:
 
-```ts
+```json
 {
-  data: '2026-12-16',
-  titolo: 'Saldo IMU',
-  descrizione: "Versamento della seconda rata dell'imposta municipale propria.",
-  destinatari: ['privato', 'impresa', 'societa'],
-  servizio: 'persone-fisiche',
-},
+  "data": "2026-12-16",
+  "titolo": "Saldo IMU",
+  "descrizione": "Versamento della seconda rata dell'imposta municipale propria.",
+  "destinatari": ["privato", "impresa", "societa"],
+  "servizio": "persone-fisiche"
+}
 ```
 
 - **`data`** va scritta come `anno-mese-giorno`, sempre con due cifre per mese e giorno.
   L'ordine in cui si scrivono le scadenze non conta: vengono ordinate da sole.
 - **`destinatari`** decide in quali filtri la scadenza compare. I valori ammessi sono
-  elencati in cima allo stesso file: `impresa`, `professionista`, `forfettario`,
-  `societa`, `privato`, `sostituto`.
+  `impresa`, `professionista`, `forfettario`, `societa`, `privato`, `sostituto`, ed
+  è la console stessa a proporli come pulsanti.
 - **`servizio`** è facoltativo e collega la scadenza a un'area di attività. Deve
   corrispondere a uno slug presente in `content/servizi.ts`.
 
-A inizio anno si cambia `annoScadenzario` e si sostituisce l'elenco con le date
-dell'anno nuovo.
+A inizio anno si cambia l'anno in cima e si sostituisce l'elenco con le date nuove.
+
+Una voce scritta male non arriva mai online: la console la rifiuta spiegando cosa non
+va, e se il file venisse modificato a mano la compilazione si ferma con un messaggio
+chiaro invece di pubblicare una pagina rotta.
 
 > Nel testo delle scadenze va **solo l'informazione**, mai una valutazione o un
 > consiglio: lo scadenzario è informazione, non consulenza.
@@ -147,11 +152,11 @@ Lo `slug` deve essere identico al nome del file, senza `.mdx`.
 |---|---|
 | Nome, indirizzo, telefono, email, PEC, orari, partita IVA | `lib/site.ts` |
 | Aree di attività: titoli, descrizioni, domande frequenti | `content/servizi.ts` |
-| Testi della home | `app/page.tsx` |
-| Testo della pagina «Lo studio» | `app/studio/page.tsx` |
-| Informativa privacy | `app/privacy/page.tsx` |
-| Cookie policy | `app/cookie-policy/page.tsx` |
-| Note legali | `app/note-legali/page.tsx` |
+| Testi della home | `app/(sito)/page.tsx` |
+| Testo della pagina «Lo studio» | `app/(sito)/studio/page.tsx` |
+| Informativa privacy | `app/(sito)/privacy/page.tsx` |
+| Cookie policy | `app/(sito)/cookie-policy/page.tsx` |
+| Note legali | `app/(sito)/note-legali/page.tsx` |
 
 Nei file `.tsx` il testo da modificare è quello leggibile in italiano fra i tag. Se una
 parola contiene un apostrofo va scritta come `l&apos;anno` anziché `l'anno`.
@@ -261,6 +266,80 @@ assenze volute, che **non vanno colmate**:
 
 Titolo, ordine di appartenenza e numero di iscrizione compaiono nel footer di ogni
 pagina: non alleggerire quella sezione.
+
+---
+
+## La console di modifica
+
+Il sito ha un pannello a **`/admin`** da cui aggiornare i contenuti senza toccare i
+file. È escluso dai motori di ricerca e non compare da nessuna parte nel sito
+pubblico: ci si arriva solo scrivendo l'indirizzo.
+
+### Come funziona
+
+La console **non ha un database**. Quando si salva, scrive il file di contenuto nel
+repository tramite l'API di GitHub e crea un commit; Cloudflare se ne accorge e
+ricompila. Le modifiche compaiono dopo un minuto o due.
+
+Il ritardo è il prezzo di questa scelta. In cambio: il sito resta interamente
+statico, non c'è alcun archivio da difendere in lettura, e **ogni modifica resta
+nella cronologia** — si vede chi ha cambiato cosa e si torna indietro con un
+`git revert`.
+
+### Attivarla
+
+Serve una volta sola. Prima si generano le credenziali:
+
+```bash
+npm run admin:password
+```
+
+Chiede email e password e stampa tre valori. Poi, nel pannello Cloudflare, in
+**Workers & Pages → il progetto → Settings → Variables**, si aggiungono come
+**Secret** (non come Text, altrimenti restano leggibili in chiaro):
+
+| Variabile | Cos'è |
+|---|---|
+| `ADMIN_EMAIL` | l'indirizzo con cui si accede |
+| `ADMIN_PASSWORD_HASH` | l'impronta della password — la password vera non è ricavabile |
+| `ADMIN_SESSION_SECRET` | firma i cookie di sessione |
+| `GITHUB_TOKEN` | token con permesso di scrittura sul repository |
+| `GITHUB_REPO` | `DjGeko8/Studio-Marinucci` |
+
+Il token GitHub si crea in *Settings → Developer settings → Personal access tokens →
+Fine-grained*, dando accesso **solo a questo repository** e il permesso
+**Contents: Read and write**. Nessun altro permesso serve.
+
+Senza queste variabili la console si dichiara non configurata e non lascia entrare
+nessuno — che è il modo giusto di sbagliare.
+
+### In sviluppo
+
+In locale, senza `GITHUB_TOKEN`, la console scrive direttamente sui file del
+computer e lo dichiara a schermo. Per provarla basta un file `.env.local` con
+`ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` e `ADMIN_SESSION_SECRET` (`.env.local` è
+escluso dal repository).
+
+### Cosa protegge l'accesso
+
+- password conservata come impronta PBKDF2 a 210.000 iterazioni, mai in chiaro;
+- sessione in un cookie firmato, non un identificativo in un archivio;
+- confronti di firma a tempo costante;
+- stesso messaggio d'errore per email inesistente e password sbagliata, così un
+  estraneo non scopre quali indirizzi sono validi;
+- attesa di un secondo su ogni tentativo fallito e massimo otto tentativi per
+  indirizzo IP ogni quarto d'ora.
+
+> ⚠️ Come per il modulo di contatto, il conteggio dei tentativi è tenuto in memoria
+> e su Workers vale poco. La regola di rate limiting del WAF va estesa anche a
+> `/api/admin/`.
+
+### Struttura delle cartelle
+
+Il pannello è una radice separata: `app/(console)/` ha il proprio layout, senza la
+barra dei contatti, la navigazione, il footer e il banner dei cookie del sito
+pubblico, che stanno in `app/(sito)/`. Per questo `app/layout.tsx` non esiste più —
+in Next.js è radice ogni layout che non ne ha un altro sopra.
 
 ---
 
