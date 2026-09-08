@@ -3,6 +3,7 @@ import { cookies } from 'next/headers'
 
 import { COOKIE_SESSIONE, configurazioneConsole, sessioneValida } from '@/lib/admin/auth'
 import { leggiDocumento, modalitaArchivio, scriviDocumenti } from '@/lib/admin/archivio'
+import { proteggiPerMdx, ripristinaDaMdx } from '@/lib/admin/mdx'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -103,7 +104,7 @@ export async function GET() {
     const articoli = await Promise.all(
       indice.articoli.map(async (a) => ({
         ...a,
-        corpo: (await leggiDocumento(testo(a.slug))).contenuto,
+        corpo: ripristinaDaMdx((await leggiDocumento(testo(a.slug))).contenuto),
       })),
     )
     return NextResponse.json({ ok: true, articoli, modalita: modalitaArchivio() })
@@ -167,7 +168,8 @@ export async function PUT(richiesta: Request) {
         { percorso: INDICE, contenuto: JSON.stringify(indice, null, 2) + '\n' },
         ...esito.map((a) => ({
           percorso: testo(a.slug),
-          contenuto: a.corpo.trimEnd() + '\n',
+          // Protetto: `{` e `<` scritti a mano romperebbero la compilazione del sito.
+          contenuto: proteggiPerMdx(a.corpo.trimEnd()) + '\n',
         })),
         ...daEliminare.map((slug) => ({ percorso: testo(slug), contenuto: null })),
       ],
