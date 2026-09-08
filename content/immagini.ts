@@ -38,16 +38,16 @@ export type Fotografia = {
 
 export const immagini: Partial<Record<SlotFoto, Fotografia>> = {
   'hero-termoli': {
-    src: '/immagini/hero-termoli-PROVVISORIA.jpg',
-    src2x: '/immagini/hero-termoli-PROVVISORIA@2x.jpg',
+    src: '/immagini/hero-termoli.jpg',
+    src2x: '/immagini/hero-termoli@2x.jpg',
     larghezza: 1600,
     altezza: 900,
-    alt: 'Il borgo antico di Termoli e il Castello Svevo visti dall’alto, sul mare',
-    provvisoria: true,
-    // ⚠️ Anteprima Adobe Stock non licenziata (rif. 496192825), con il watermark
-    // dell'autore ancora impresso. Serve solo a valutare l'impaginazione.
-    // Va sostituita da una fotografia commissionata o regolarmente acquistata.
-    credito: 'Anteprima Adobe Stock 496192825 — NON LICENZIATA',
+    alt: 'Il Castello Svevo di Termoli sul mare, in un acquerello',
+    provvisoria: false,
+    // Illustrazione ad acquerello fornita dal committente, che ne ha dichiarato la
+    // libera utilizzabilità. L'originale è 1574px, appena sotto i 1600 richiesti:
+    // se in futuro se ne trova una versione più grande, vale la pena rifarla.
+    credito: 'Acquerello fornito dal committente — utilizzo dichiarato libero',
   },
 
   'ritratto-verticale': {
