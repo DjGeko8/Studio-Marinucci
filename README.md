@@ -327,6 +327,15 @@ Chiede email e password e stampa tre valori. Poi, nel pannello Cloudflare, in
 | `GITHUB_TOKEN` | token con permesso di scrittura sul repository |
 | `GITHUB_REPO` | `DjGeko8/Studio-Marinucci` |
 
+> ⚠️ **Tutte come «Secret», nessuna come «Text».** Non è un dettaglio: le variabili in
+> chiaro vengono sostituite a ogni rilascio da quelle dichiarate in `wrangler.jsonc`.
+> Una variabile aggiunta dal pannello come Text sparisce al primo deploy successivo,
+> in silenzio. È successo con `GITHUB_TOKEN`: la console funzionava, poi un rilascio
+> l'ha cancellata e ha ricominciato a dire che GitHub non era collegato.
+>
+> Per questo `wrangler.jsonc` non dichiara più alcun blocco `vars`. Vale anche per
+> `MAIL_DESTINATARIO` e `MAIL_MITTENTE` quando arriverà la casella dello studio.
+
 Il token GitHub si crea in *Settings → Developer settings → Personal access tokens →
 Fine-grained*, dando accesso **solo a questo repository** e il permesso
 **Contents: Read and write**. Nessun altro permesso serve.

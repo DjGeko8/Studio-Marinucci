@@ -37,13 +37,19 @@
   // finché non stai collaudando proprio l'invio.
   "send_email": [{ "name": "EMAIL" }],
 
-  "vars": {
-    // Destinatario delle richieste dal sito. «TBD:EMAIL» — sostituire con la
-    // casella reale dello studio prima della pubblicazione.
-    "MAIL_DESTINATARIO": "",
-    // Mittente tecnico. Deve appartenere al dominio abilitato all'invio.
-    "MAIL_MITTENTE": ""
-  },
+  // ── Nessun blocco "vars" qui, ed è deliberato ──────────────────────────────
+  //
+  // Le variabili in chiaro dichiarate in questo file sostituiscono a OGNI rilascio
+  // quelle impostate dal pannello. Con due segnaposto vuoti qui dentro, chiunque
+  // avesse aggiunto una variabile dal pannello se la vedeva cancellare al primo
+  // deploy — in silenzio, senza che nulla lo segnalasse. È successo con
+  // GITHUB_TOKEN, ed è quello che sarebbe successo con MAIL_DESTINATARIO il giorno
+  // in cui arriva la casella dello studio.
+  //
+  // Tutte le variabili di questo sito vanno quindi impostate come **Secret**:
+  // ADMIN_EMAIL, ADMIN_PASSWORD_HASH, ADMIN_SESSION_SECRET, GITHUB_TOKEN,
+  // GITHUB_REPO, MAIL_DESTINATARIO, MAIL_MITTENTE. I Secret non sono toccati dai
+  // rilasci. Vedi il README, sezione «La console di modifica».
 
   // Il dominio si collega dopo il primo deploy, quando la zona è attiva su
   // Cloudflare. Fino ad allora il sito risponde sull'indirizzo *.workers.dev.
