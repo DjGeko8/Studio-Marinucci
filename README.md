@@ -236,8 +236,9 @@ un avviso impresso nei pixel non si dimentica come si dimentica una riga in un f
 npm run verifica-immagini
 ```
 
-esce con errore finché ne resta una in uso. `npm run verifica` esegue insieme questo
-controllo e quello sui dati mancanti.
+esce con errore finché ne resta una in uso. `npm run verifica` esegue insieme il
+controllo dei tipi, quello dei dati mancanti e quello delle fotografie — è il comando
+da lanciare prima di inviare una modifica.
 
 Le provvisorie **sono versionate**, così l'anteprima online mostra il sito completo.
 L'unica esclusa è la foto del castello: è un'anteprima Adobe Stock non licenziata, e

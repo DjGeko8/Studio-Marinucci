@@ -10,7 +10,7 @@
     "build:turbopack": "next build",
     "start": "next start -p 8320",
     "typecheck": "tsc --noEmit",
-    "verifica": "npm run verifica-segnaposto && npm run verifica-immagini",
+    "verifica": "npm run typecheck && npm run verifica-segnaposto && npm run verifica-immagini",
     "verifica-segnaposto": "node scripts/verifica-segnaposto.mjs",
     "verifica-immagini": "node scripts/verifica-immagini.mjs",
     "verifica-file-immagini": "node scripts/verifica-file-immagini.mjs",
