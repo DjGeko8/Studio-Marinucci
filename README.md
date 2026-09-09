@@ -575,6 +575,15 @@ lib/           dati dello studio e funzioni di servizio
 public/        immagini e file scaricabili
 ```
 
+### Skill per gli assistenti di sviluppo
+
+`.claude/skills/console-studio-marinucci/` raccoglie l'impianto della console e le sette
+trappole incontrate mettendola in funzione — variabili che spariscono dopo un rilascio,
+il limite di 10 ms di CPU dei Worker, i tre codici di errore di GitHub, e le altre.
+Ognuna ha richiesto ore perché falliva in silenzio o indicava il posto sbagliato.
+
+Chi tocca il login o la console farebbe bene a leggerla prima di indagare da capo.
+
 ### Documenti di progetto
 
 - [`docs/FASE-2-ARCHITETTURA.md`](docs/FASE-2-ARCHITETTURA.md) — struttura del sito e

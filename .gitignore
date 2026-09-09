@@ -21,7 +21,11 @@ Thumbs.db
 #   npx -y skills add cloudflare/skills --skill '*' --yes
 # Se preferisci che chi clona il repository le trovi già pronte, togli queste righe.
 .agents/
-.claude/skills/
+# La forma con /* invece che / e' necessaria: git non puo' riammettere qualcosa
+# dentro una cartella gia' esclusa per intero.
+.claude/skills/*
+# ...tranne le skill scritte per questo progetto, che sono documentazione nostra.
+!.claude/skills/console-studio-marinucci/
 
 # Credenziali della console generate in locale: mai nel repository.
 .credenziali-console.txt
