@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 8320",
+    "prebuild": "node scripts/verifica-file-immagini.mjs",
     "build": "next build --webpack",
     "postbuild": "opennextjs-cloudflare build --skipNextBuild",
     "build:turbopack": "next build",
@@ -12,12 +13,13 @@
     "verifica": "npm run verifica-segnaposto && npm run verifica-immagini",
     "verifica-segnaposto": "node scripts/verifica-segnaposto.mjs",
     "verifica-immagini": "node scripts/verifica-immagini.mjs",
+    "verifica-file-immagini": "node scripts/verifica-file-immagini.mjs",
+    "verifica-segreti": "node scripts/verifica-segreti.mjs",
     "prepara-provvisorie": "python scripts/prepara-provvisorie.py",
+    "admin:password": "node scripts/crea-password.mjs",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "node scripts/verifica-segreti.mjs && opennextjs-cloudflare deploy",
-    "cf:tipi": "wrangler types",
-    "admin:password": "node scripts/crea-password.mjs",
-    "verifica-segreti": "node scripts/verifica-segreti.mjs"
+    "cf:tipi": "wrangler types"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

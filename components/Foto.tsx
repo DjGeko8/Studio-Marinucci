@@ -1,6 +1,5 @@
 import { ImagePlaceholder, cx } from '@/components/ui'
 import { fotografia, type SlotFoto } from '@/content/immagini'
-import { filePubblicoEsiste } from '@/lib/file-pubblici'
 
 /**
  * Fotografia del sito.
@@ -40,10 +39,19 @@ export function Foto({
 }) {
   const foto = fotografia(slot)
 
-  // Registrata ma con il file assente: si torna al segnaposto. Meglio un rettangolo
-  // onesto di un'icona di immagine spezzata — succede con le foto escluse dal
-  // versionamento, come l'anteprima stock non licenziata del castello.
-  if (!foto || !filePubblicoEsiste(foto.src)) {
+  // Nessuna voce nel registro: lo spazio non ha ancora una fotografia.
+  //
+  // Qui NON si controlla che il file esista davvero. C'era un controllo del genere
+  // e ha causato esattamente il problema che doveva prevenire: con `output:
+  // 'standalone'` la generazione delle pagine gira da una posizione diversa, il
+  // controllo rispondeva «il file non c'è» e il segnaposto finiva stampato
+  // nell'HTML pubblicato — in silenzio, con i file regolarmente al loro posto.
+  //
+  // Che un'immagine registrata esista è ora verificato da
+  // `scripts/verifica-file-immagini.mjs`, che gira prima di ogni compilazione e la
+  // fa fallire con un messaggio chiaro. Un controllo che si accorge del problema e
+  // lo nasconde è peggio di uno che si ferma.
+  if (!foto) {
     return (
       <ImagePlaceholder
         label={etichetta}
