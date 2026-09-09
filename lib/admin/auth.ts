@@ -147,6 +147,24 @@ export type ConfigurazioneConsole = {
  * configurata invece di accettare accessi. Un pannello che si apre perché una
  * variabile è vuota è il modo peggiore di sbagliare.
  */
+/**
+ * L'impronta ha la forma «iterazioni:salt:derivata», con salt di 16 byte e derivata
+ * di 32, entrambi in esadecimale: 32 e 64 caratteri.
+ *
+ * Controllare anche le lunghezze, non solo che i pezzi siano tre, serve a un caso
+ * preciso: un valore incollato a metà conserva i due punti e passerebbe un controllo
+ * di sola forma, per poi fallire il confronto. L'utente vedrebbe «password non
+ * corretta» e cambierebbe password all'infinito, senza sapere che il problema è
+ * altrove.
+ */
+function formaImprontaValida(impronta: string): boolean {
+  const parti = impronta.split(':')
+  if (parti.length !== 3) return false
+  const [iterazioni, salt, derivata] = parti as [string, string, string]
+  if (!/^\d+$/.test(iterazioni) || Number.parseInt(iterazioni, 10) < 1000) return false
+  return /^[0-9a-f]{32}$/i.test(salt) && /^[0-9a-f]{64}$/i.test(derivata)
+}
+
 export function configurazioneConsole(): ConfigurazioneConsole | null {
   const email = process.env.ADMIN_EMAIL?.trim()
   const hashPassword = process.env.ADMIN_PASSWORD_HASH?.trim()
@@ -154,6 +172,7 @@ export function configurazioneConsole(): ConfigurazioneConsole | null {
 
   if (!email || !hashPassword || !segretoSessione) return null
   if (segretoSessione.length < 32) return null
+  if (!formaImprontaValida(hashPassword)) return null
 
   return { email, hashPassword, segretoSessione }
 }
@@ -179,12 +198,27 @@ export function diagnosiConsole(): string[] {
   const hash = process.env.ADMIN_PASSWORD_HASH?.trim()
   if (!hash) {
     problemi.push('ADMIN_PASSWORD_HASH non arriva al server (assente o vuota).')
-  } else if (hash.split(':').length !== 3) {
-    problemi.push(
-      'ADMIN_PASSWORD_HASH non ha la forma attesa «iterazioni:salt:impronta». ' +
-        'Va incollato per intero il valore prodotto da `npm run admin:password`, ' +
-        'non la password.',
-    )
+  } else if (!formaImprontaValida(hash)) {
+    const parti = hash.split(':')
+    if (parti.length !== 3) {
+      problemi.push(
+        'ADMIN_PASSWORD_HASH non ha la forma attesa «iterazioni:salt:impronta». ' +
+          'Va incollato il valore prodotto da `npm run admin:password`, non la password.',
+      )
+    } else {
+      const salt = parti[1] ?? ''
+      const derivata = parti[2] ?? ''
+      const lunghezzeGiuste = salt.length === 32 && derivata.length === 64
+      problemi.push(
+        lunghezzeGiuste
+          ? 'ADMIN_PASSWORD_HASH ha la lunghezza giusta ma contiene caratteri estranei: ' +
+            'sono ammessi solo cifre e lettere da a a f. Probabilmente si è infilato uno ' +
+            'spazio o un a capo incollandolo.'
+          : `ADMIN_PASSWORD_HASH è incompleto: salt ${salt.length}/32, ` +
+            `impronta ${derivata.length}/64, in tutto ${hash.length} caratteri invece di 104. ` +
+            'È stato incollato solo in parte — e sarebbe apparso come «password non corretta».',
+      )
+    }
   }
 
   const segreto = process.env.ADMIN_SESSION_SECRET?.trim()
