@@ -19,7 +19,8 @@
     "admin:password": "node scripts/crea-password.mjs",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "node scripts/verifica-segreti.mjs && opennextjs-cloudflare deploy",
-    "cf:tipi": "wrangler types"
+    "cf:tipi": "wrangler types",
+    "admin:imposta": "node scripts/imposta-secret.mjs"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

@@ -22,3 +22,6 @@ Thumbs.db
 # Se preferisci che chi clona il repository le trovi già pronte, togli queste righe.
 .agents/
 .claude/skills/
+
+# Credenziali della console generate in locale: mai nel repository.
+.credenziali-console.txt

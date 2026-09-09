@@ -2,18 +2,20 @@
 /**
  * Genera i valori da mettere nelle variabili d'ambiente della console.
  *
- *     npm run admin:password
+ *     npm run admin:password              chiede email e password
+ *     npm run admin:password -- --temporanee   ne inventa di provvisorie
  *
- * Stampa l'hash della password e un segreto di sessione. Nessuno dei due va nel
- * repository: si incollano nel pannello Cloudflare, fra le variabili del Worker,
- * marcandoli come «Secret» — non come «Text», altrimenti restano leggibili in chiaro
- * a chiunque apra le impostazioni.
+ * Stampa l'hash della password e un segreto di sessione, e li salva in
+ * `.credenziali-console.txt` (escluso dal repository) perché
+ * `npm run admin:imposta` possa caricarli su Cloudflare senza farli passare dagli
+ * appunti — dove un'impronta di 104 caratteri si tronca con facilità.
  *
- * La password in chiaro non viene salvata da nessuna parte: da qui esce solo
- * l'hash, dal quale non si torna indietro.
+ * La password in chiaro non viene conservata da nessun'altra parte: da qui esce
+ * solo l'impronta, dalla quale non si torna indietro.
  */
 
 import { createInterface } from 'node:readline/promises'
+import { writeFile } from 'node:fs/promises'
 import { stdin, stdout } from 'node:process'
 
 const ITERAZIONI = 210_000
@@ -39,38 +41,93 @@ async function hashPassword(password) {
   return `${ITERAZIONI}:${esadecimale(salt.buffer)}:${esadecimale(bit)}`
 }
 
-const rl = createInterface({ input: stdin, output: stdout })
+/**
+ * Con `--temporanee` non chiede nulla e inventa una password.
+ *
+ * Serve a far partire la console subito, con credenziali da sostituire appena il
+ * professionista sceglie le sue. Ventiquattro caratteri casuali sono comunque più
+ * solidi di quasi tutte le password scelte a mano — l'unica ragione per cui vanno
+ * cambiate è che queste sono passate da una conversazione.
+ */
+const temporanee = process.argv.includes('--temporanee')
 
-console.log('\nGenerazione delle credenziali della console\n')
-const email = (await rl.question('Email di accesso: ')).trim()
-const password = await rl.question('Password (verrà mostrata a schermo): ')
-rl.close()
+let email
+let password
 
-if (!email.includes('@')) {
-  console.error('\n✗ Email non valida.')
-  process.exit(1)
-}
-if (password.length < 12) {
-  console.error(
-    '\n✗ Password troppo corta: almeno 12 caratteri.' +
-      '\n  È l’unica cosa che protegge la console: una lunga e inventata sul momento' +
-      '\n  vale più di una corta e complicata.',
-  )
-  process.exit(1)
+if (temporanee) {
+  // Alfabeto senza i caratteri che si confondono leggendo: l/I/1, O/0.
+  const alfabeto = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  password = [...crypto.getRandomValues(new Uint8Array(24))]
+    .map((n) => alfabeto[n % alfabeto.length])
+    .join('')
+  const forse = process.argv[process.argv.indexOf('--temporanee') + 1]
+  email = forse && forse.includes('@') ? forse : 'console@studio-marinucci.local'
+  console.log('\nCredenziali TEMPORANEE generate\n')
+} else {
+  const rl = createInterface({ input: stdin, output: stdout })
+  console.log('\nGenerazione delle credenziali della console\n')
+  email = (await rl.question('Email di accesso: ')).trim()
+  password = await rl.question('Password (verrà mostrata a schermo): ')
+  rl.close()
+
+  if (!email.includes('@')) {
+    console.error('\n✗ Email non valida.')
+    process.exit(1)
+  }
+  if (password.length < 12) {
+    console.error(
+      '\n✗ Password troppo corta: almeno 12 caratteri.' +
+        '\n  È l’unica cosa che protegge la console: una lunga e inventata sul momento' +
+        '\n  vale più di una corta e complicata.',
+    )
+    process.exit(1)
+  }
 }
 
 const hash = await hashPassword(password)
 const segreto = esadecimale(crypto.getRandomValues(new Uint8Array(32)).buffer)
 
-console.log('\n' + '─'.repeat(72))
+const linea = '─'.repeat(72)
+console.log(linea)
 console.log('Variabili da impostare come SECRET nel Worker su Cloudflare:\n')
 console.log(`ADMIN_EMAIL=${email}`)
 console.log(`ADMIN_PASSWORD_HASH=${hash}`)
 console.log(`ADMIN_SESSION_SECRET=${segreto}`)
-console.log('\nServe inoltre un token GitHub con permesso di scrittura sul repository:')
+console.log('\nServe inoltre un token GitHub con permesso di scrittura sul repository,')
+console.log('ma non blocca l’accesso: senza, si entra e si vede tutto in sola lettura.')
 console.log('GITHUB_TOKEN=...')
 console.log('GITHUB_REPO=DjGeko8/Studio-Marinucci')
-console.log('─'.repeat(72))
-console.log('\nNON metterli nel repository. Se un giorno cambia la password, si rigenera')
-console.log('solo ADMIN_PASSWORD_HASH: le sessioni aperte restano valide fino a scadenza,')
-console.log('e per chiuderle subito basta cambiare anche ADMIN_SESSION_SECRET.\n')
+console.log(linea)
+
+const intestazione = temporanee
+  ? '# Credenziali TEMPORANEE della console — da sostituire.\n'
+  : '# Credenziali della console.\n'
+
+await writeFile(
+  new URL('../.credenziali-console.txt', import.meta.url),
+  intestazione +
+    '# NON versionare, NON condividere.\n' +
+    `# Password: ${password}\n\n` +
+    `ADMIN_EMAIL=${email}\n` +
+    `ADMIN_PASSWORD_HASH=${hash}\n` +
+    `ADMIN_SESSION_SECRET=${segreto}\n`,
+  'utf8',
+)
+
+console.log('\nSalvati anche in .credenziali-console.txt, escluso dal repository.')
+console.log('Per caricarli su Cloudflare:')
+console.log('    npx wrangler login')
+console.log('    npm run admin:imposta')
+
+if (temporanee) {
+  console.log('\n┌─ PASSWORD TEMPORANEA ' + '─'.repeat(48))
+  console.log('│  ' + password)
+  console.log('└' + '─'.repeat(69))
+  console.log('\nAnnotala: da qui in poi resta solo la sua impronta.')
+}
+
+console.log(
+  '\nSe un giorno cambia la password si rigenera solo ADMIN_PASSWORD_HASH: le sessioni\n' +
+    'aperte restano valide fino a scadenza, e per chiuderle subito si cambia anche\n' +
+    'ADMIN_SESSION_SECRET.\n',
+)
