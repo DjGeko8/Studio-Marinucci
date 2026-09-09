@@ -10,6 +10,7 @@ const SEZIONI = [
   { href: '/admin/scadenze', label: 'Scadenzario' },
   { href: '/admin/servizi', label: 'Aree di attività' },
   { href: '/admin/articoli', label: 'Approfondimenti' },
+  { href: '/admin/pagine', label: 'Testi delle pagine' },
 ]
 
 export function NavConsole() {

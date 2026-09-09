@@ -18,8 +18,9 @@ export function PageHero({
   children,
 }: {
   eyebrow?: string
-  titolo: string
-  sommario?: string
+  /** Titolo e sommario accettano elementi: possono contenere campi automatici. */
+  titolo: ReactNode
+  sommario?: ReactNode
   briciole?: Briciola[]
   children?: ReactNode
 }) {

@@ -29,3 +29,9 @@ Thumbs.db
 
 # Credenziali della console generate in locale: mai nel repository.
 .credenziali-console.txt
+
+# Cartella temporanea delle prove: generata da scripts/esegui-ts.mjs.
+.prove/
+
+# Copie datate delle credenziali precedenti.
+.credenziali-console.*.txt

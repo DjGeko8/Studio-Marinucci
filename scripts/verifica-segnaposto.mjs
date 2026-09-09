@@ -23,10 +23,12 @@ const SEGNAPOSTO = /«TBD:[^»]*»/g
  * — `app/showcase` è la pagina interna del design system, esclusa dai motori di
  *   ricerca: il segnaposto lì è un esempio del componente, non un dato mancante.
  * — I riferimenti scritti dentro un template literal (`${id}`) sono la definizione
- *   della funzione che genera i segnaposto, non un segnaposto.
+ *   della funzione che genera i segnaposto, non un segnaposto. Vale lo stesso per una
+ *   corrispondenza che contiene metacaratteri di espressione regolare: è la regola che
+ *   li riconosce, non un dato mancante.
  */
 const PERCORSI_ESCLUSI = ['app/showcase']
-const daIgnorare = (testo) => testo.includes('${')
+const daIgnorare = (testo) => testo.includes('${') || /[[\]^\\]/.test(testo)
 
 async function* file(cartella) {
   let voci

@@ -68,7 +68,8 @@ export function Accesso({
             La console dello studio.
           </h1>
           <p className="mt-6 text-body text-petrolio-100">
-            Da qui si aggiornano lo scadenzario e gli approfondimenti. Ogni modifica
+            Da qui si aggiornano lo scadenzario, le aree di attività, gli approfondimenti
+            e i testi delle pagine. Ogni modifica
             viene registrata nella cronologia del sito e pubblicata dopo un minuto o
             due, il tempo della ricompilazione.
           </p>

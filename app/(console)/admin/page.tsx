@@ -23,6 +23,12 @@ const SEZIONI = [
     testo:
       'Gli articoli firmati dallo studio. Meglio tre utili all’anno che una sezione ferma da un anno: sotto i tre articoli si nasconde da sola.',
   },
+  {
+    href: '/admin/pagine',
+    titolo: 'Testi delle pagine',
+    testo:
+      'La prosa di «Lo studio», privacy, cookie policy e note legali. I dati obbligatori restano fuori: il sito li stampa da sé, così non possono mancare per distrazione.',
+  },
 ]
 
 export default function RiepilogoPage() {

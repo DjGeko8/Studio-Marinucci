@@ -1,6 +1,6 @@
 ---
 name: console-studio-marinucci
-description: Console di amministrazione del sito Studio Marinucci (/admin) — autenticazione, variabili d'ambiente su Cloudflare Workers, archivio su GitHub. Usa questa skill ogni volta che si tocca il login o la console, che si aggiunge una sezione modificabile, che si configurano ADMIN_EMAIL / ADMIN_PASSWORD_HASH / ADMIN_SESSION_SECRET / GITHUB_TOKEN / GITHUB_REPO, o che compare uno di questi sintomi sul sito pubblicato — «La console non è ancora configurata», «Non è stato possibile contattare il server», errore 500 dal corpo vuoto, «no such file or directory /bundle/...», «Lettura da GitHub non riuscita (401)», variabili che spariscono dopo un rilascio, o una correzione che sembra non avere effetto. Contiene la diagnosi già fatta di sette trappole che hanno richiesto ore: leggerla prima di indagare da capo fa risparmiare tempo.
+description: Console di amministrazione del sito Studio Marinucci (/admin) — autenticazione, variabili d'ambiente su Cloudflare Workers, archivio su GitHub. Usa questa skill ogni volta che si tocca il login o la console, che si aggiunge una sezione modificabile, che si configurano ADMIN_EMAIL / ADMIN_PASSWORD_HASH / ADMIN_SESSION_SECRET / GITHUB_TOKEN / GITHUB_REPO, o che compare uno di questi sintomi sul sito pubblicato — «La console non è ancora configurata», «Non è stato possibile contattare il server», errore 500 dal corpo vuoto, «no such file or directory /bundle/...», «Lettura da GitHub non riuscita (401)», variabili che spariscono dopo un rilascio, o una correzione che sembra non avere effetto. Contiene la diagnosi già fatta di nove trappole che hanno richiesto ore: leggerla prima di indagare da capo fa risparmiare tempo.
 ---
 
 # Console di amministrazione — Studio Marinucci
@@ -26,6 +26,8 @@ cosa e si torna indietro con un `git revert`.
 | Autenticazione | `lib/admin/auth.ts` |
 | Lettura e scrittura dei contenuti | `lib/admin/archivio.ts` |
 | Protezione dei testi scritti in console | `lib/admin/mdx.ts` |
+| Controllo dei salvataggi dei testi di pagina | `lib/admin/valida-pagine.ts` |
+| Lingua dei testi modificabili (grassetto, link, campi) | `lib/testo-ricco.ts` |
 | Cancello e contorno | `app/(console)/admin/layout.tsx` |
 | Rotte di servizio | `app/api/admin/*/route.ts` |
 | Interfaccia | `components/admin/*.tsx` |
@@ -116,6 +118,40 @@ Se le tocchi, sappi cosa stai togliendo.
   sono effimeri e distribuiti, ognuno conta per conto proprio. Il limite vero va messo
   come regola di rate limiting del WAF su `/api/admin/` e `/api/contatti`.
 
+## Cosa si lascia modificare, e cosa no
+
+Scadenzario, aree di attivita', approfondimenti e i testi discorsivi delle pagine si
+modificano dalla console. **I dati obbligatori no**, di proposito: partita IVA, PEC,
+numero d'iscrizione all'albo, estremi della polizza (art. 5 DPR 137/2012), titolare del
+trattamento (artt. 13-14 GDPR). Restano in `lib/site.ts`, stampati dalle pagine.
+
+Il criterio, che vale anche per le sezioni future: **un campo di testo libero e' il posto
+sbagliato per un'informazione che non puo' mancare.** Li' una riga si cancella per
+distrazione e non se ne accorge nessuno finche' non lo fa notare chi ha motivo di
+controllare. Da un modulo di configurazione si cancella solo di proposito, e il conteggio
+dei segnaposto se ne accorge comunque.
+
+Da qui discendono tre meccanismi in `content/pagine.ts`:
+
+- **le sezioni previste** (`STRUTTURA[chiave].sezioni`) non si possono eliminare: sono
+  quelle a cui la pagina affianca un blocco di dati. Toglierne una porterebbe via il
+  blocco insieme al testo;
+- **nascondere** e' concesso solo dove `opzionale: true` lo dichiara — oggi la sola
+  sezione «Incarichi»;
+- **aggiungere** e' concesso solo dove `sezioniLibere: true` (le pagine legali, che nel
+  tempo crescono) e non dove l'impaginazione assegna a ogni sezione un posto accanto a
+  una fotografia («Lo studio»).
+
+Le `ancore` nelle pagine legano un blocco di dati alla sezione che lo introduce: il testo
+si puo' riordinare e riscrivere, il blocco lo segue. Vedi
+`components/SezioniPagina.tsx`.
+
+**I campi automatici `{{...}}`** (`lib/testo-ricco.ts`) servono a citare un dato dentro
+una frase senza copiarlo: scritto a mano, il giorno in cui cambia resta indietro in
+silenzio. Sono anche il motivo per cui la lingua dei testi e' minuscola — grassetto,
+collegamenti, campi e nient'altro: ogni costrutto in piu' sarebbe una superficie in piu'
+da controllare, e il testo non diventa mai HTML ma elementi React.
+
 ## Aggiungere una sezione modificabile
 
 Lo schema è sempre lo stesso, ed è già stato percorso tre volte (scadenzario, aree di
@@ -151,8 +187,13 @@ testo non c'è ancora, e la compilazione fallisce.
 ## Prima di inviare una modifica
 
 ```bash
-npm run verifica    # tipi + dati mancanti + fotografie
+npm run verifica    # tipi + prove + dati mancanti + fotografie
 ```
+
+`npm run prova-pagine` gira da solo, senza accesso e senza modulo web, perche' il
+controllo dei salvataggi sta in un modulo a parte apposta. Un controllo che si puo'
+verificare **solo** compilando un modulo e premendo «salva» non viene verificato quasi
+mai — e quello che protegge sono dati che la legge impone di pubblicare.
 
 Il controllo dei tipi è nell'elenco perché è ciò che ha fatto fallire due compilazioni di
 fila. Se va in errore di memoria, **la cosa giusta è liberare memoria e rifarlo**, non

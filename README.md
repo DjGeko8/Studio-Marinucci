@@ -163,19 +163,65 @@ Lo `slug` deve essere identico al nome del file, senza `.mdx`.
 
 ## Correggere un testo delle pagine
 
+**Il modo normale è la console: `/admin` → Testi delle pagine.** Da lì si riscrivono
+«Lo studio», l'informativa privacy, la cookie policy e le note legali: titolo, sommario,
+e i paragrafi di ogni sezione.
+
 | Cosa | Dove |
 |---|---|
-| Nome, indirizzo, telefono, email, PEC, orari, partita IVA | `lib/site.ts` |
+| Testi di «Lo studio», privacy, cookie policy, note legali | la console, oppure `content/dati/pagine.json` |
 | Aree di attività: titoli, descrizioni, domande frequenti | la console, oppure `content/dati/servizi.json` |
-| Scadenze e articoli | la console in `/admin`, oppure `content/dati/` |
+| Scadenze e articoli | la console, oppure `content/dati/` |
+| Nome, indirizzo, telefono, email, PEC, orari, partita IVA, polizza | `lib/site.ts` |
 | Testi della home | `app/(sito)/page.tsx` |
-| Testo della pagina «Lo studio» | `app/(sito)/studio/page.tsx` |
-| Informativa privacy | `app/(sito)/privacy/page.tsx` |
-| Cookie policy | `app/(sito)/cookie-policy/page.tsx` |
-| Note legali | `app/(sito)/note-legali/page.tsx` |
 
-Nei file `.tsx` il testo da modificare è quello leggibile in italiano fra i tag. Se una
-parola contiene un apostrofo va scritta come `l&apos;anno` anziché `l'anno`.
+### Cosa la console non lascia modificare, e perché
+
+Partita IVA, PEC, numero di iscrizione all'albo, estremi della polizza, titolare del
+trattamento: **non si toccano dalla console**. Il sito li stampa da sé, prendendoli da
+`lib/site.ts`.
+
+Non è una limitazione arbitraria. Sono dati che la legge impone di pubblicare — l'art. 5
+del D.P.R. 137/2012 per la polizza, gli artt. 13-14 del GDPR per il titolare — e un
+campo di testo libero è il posto sbagliato per un'informazione che non può mancare: lì
+una riga si cancella per distrazione e non se ne accorge nessuno. Stando in `lib/site.ts`
+si cambiano in **un punto solo** e restano uguali in tutte le pagine e nel piè di pagina.
+
+Per lo stesso motivo la console **rifiuta di eliminare** le sezioni che portano con sé
+uno di quei blocchi, e spiega perché quando ci si prova.
+
+### Come si scrive un testo nella console
+
+Tre cose, e nient'altro:
+
+- `**parola**` mette in **grassetto**;
+- `[testo](/privacy)` fa un collegamento a una pagina del sito, `[testo](https://…)` a
+  un sito esterno;
+- `{{nomeCompleto}}`, `{{sede}}`, `{{numeroAlbo}}`… inseriscono un dato dello studio,
+  che si aggiorna da solo. L'elenco completo con il valore di ciascuno è dentro la
+  console, sotto «Come si scrive un testo»: un clic lo copia.
+
+I campi automatici sono il modo giusto di citare un dato dentro una frase. Scritto a
+mano, il giorno in cui cambia resta indietro in silenzio; scritto come `{{numeroAlbo}}`,
+il testo lo segue.
+
+### A mano, senza console
+
+I testi stanno in [`content/dati/pagine.json`](content/dati/pagine.json). Ogni pagina ha
+un titolo, un sommario e un elenco di sezioni; ogni sezione ha un titolo e dei blocchi,
+che sono paragrafi oppure elenchi puntati.
+
+Le sezioni previste dall'impaginazione non si possono togliere e non si possono
+rinominare (l'`id` è il loro nome interno): se ne manca una, la compilazione si ferma
+dicendo quale. Alle pagine legali se ne possono **aggiungere** di nuove; a «Lo studio»
+no, perché lì ogni sezione ha un posto assegnato accanto a una fotografia o a una
+tabella.
+
+Per provare che un testo modificato a mano non rompa nulla:
+
+```bash
+npm run prova-pagine
+```
 
 ---
 
@@ -577,8 +623,8 @@ public/        immagini e file scaricabili
 
 ### Skill per gli assistenti di sviluppo
 
-`.claude/skills/console-studio-marinucci/` raccoglie l'impianto della console e le sette
-trappole incontrate mettendola in funzione — variabili che spariscono dopo un rilascio,
+`.claude/skills/console-studio-marinucci/` raccoglie l'impianto della console e le nove
+trappole incontrate costruendola e mettendola in funzione — variabili che spariscono dopo un rilascio,
 il limite di 10 ms di CPU dei Worker, i tre codici di errore di GitHub, e le altre.
 Ognuna ha richiesto ore perché falliva in silenzio o indicava il posto sbagliato.
 

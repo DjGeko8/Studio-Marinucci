@@ -70,9 +70,16 @@ Finché la risposta non arriva, l'indirizzo compare in **un solo punto del codic
 
 | ID | Dato | Dove serve |
 |---|---|---|
-| `DPO` | Se è stato nominato un responsabile della protezione dei dati | `/privacy`. Se non nominato, **la voce va rimossa**, non lasciata vuota |
+| `DPO` | Se è stato nominato un responsabile della protezione dei dati | `/privacy`. Se non nominato si scrive `dpo: null` in `lib/site.ts` e la riga sparisce da sola: non va lasciata vuota né cancellata a mano dalla pagina |
 | `CONSERVAZIONE` | Per quanti mesi si conservano le richieste che non diventano incarichi | `/privacy`. Va scelto un termine e rispettato |
+| `POLIZZA` | Compagnia, **numero di polizza** e **massimale**: sono tre dati distinti (art. 5 DPR 137/2012) | `/note-legali` e piè di pagina. In `lib/site.ts`, `datiObbligatori.polizza` |
 | `HOSTING` | Fornitori nominati responsabili del trattamento (hosting, posta) e se trattano dati solo nello SEE | `/privacy`. Dipende da `HOSTING` in §E |
+
+> Dal 2026-09-09 i testi discorsivi di queste pagine si correggono dalla console
+> (`/admin` → Testi delle pagine) e stanno in `content/dati/pagine.json`. I segnaposto
+> `CONSERVAZIONE` e `HOSTING` vivono lì dentro, quindi si completano **senza toccare il
+> codice**. `DPO`, `PIVA`, `PEC` e `POLIZZA` no: sono dati obbligatori, stanno in
+> `lib/site.ts` e la console non li tocca di proposito.
 
 ---
 

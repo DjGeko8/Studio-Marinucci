@@ -107,8 +107,25 @@ export const contatti = {
 export const datiObbligatori = {
   /** «TBD:PIVA» */
   partitaIva: tbd('PIVA'),
-  /** «TBD:POLIZZA» — art. 5 DPR 137/2012: compagnia e massimale. */
-  polizzaRc: tbd('POLIZZA'),
+  /**
+   * «TBD:POLIZZA» — art. 5 DPR 137/2012: la norma impone di rendere noti compagnia,
+   * numero di polizza e massimale. Sono tre dati distinti: tenerli in un campo solo
+   * costringeva a ripetere lo stesso segnaposto tre volte, e il giorno in cui arriva
+   * la polizza vera avrebbe stampato la compagnia anche sotto «Massimale».
+   */
+  polizza: {
+    compagnia: tbd('POLIZZA'),
+    numero: tbd('POLIZZA'),
+    massimale: tbd('POLIZZA'),
+  },
+  /**
+   * Responsabile della protezione dei dati.
+   *
+   * «TBD:DPO» — per un professionista singolo la nomina non è quasi mai obbligatoria
+   * (art. 37 GDPR). Se non è stato nominato, qui va `null`: la riga sparisce
+   * dall'informativa invece di dichiarare un ruolo che non esiste.
+   */
+  dpo: tbd('DPO') as string | null,
 } as const
 
 /** «TBD:ORARI» — orari reali da confermare; questi non vanno pubblicati così come sono. */

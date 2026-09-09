@@ -1,7 +1,8 @@
 # Le trappole, e come riconoscerle
 
-Sette problemi incontrati davvero mettendo in funzione la console. Hanno in comune una
-cosa: **falliscono in silenzio o con un messaggio che indica il posto sbagliato.**
+Nove problemi incontrati davvero costruendo e mettendo in funzione la console. Hanno in
+comune una cosa: **falliscono in silenzio o con un messaggio che indica il posto
+sbagliato.**
 
 ## Tabella rapida
 
@@ -15,6 +16,7 @@ cosa: **falliscono in silenzio o con un messaggio che indica il posto sbagliato.
 | Una correzione sembra non avere effetto | «Retry» ricompila il commit vecchio | [§6](#6) |
 | Rettangoli grigi al posto delle foto sul sito pubblicato | sondaggio del filesystem in un componente | [§7](#7) |
 | Segreti dentro il pacchetto pubblicato | `.env.local` presente alla compilazione | [§8](#8) |
+| Una pagina con del grassetto non risponde più | espressione regolare globale condivisa fra chiamate annidate | [§9](#9) |
 
 ---
 
@@ -160,14 +162,35 @@ segno di nulla**.
 generato e si rifiuta di pubblicare se le variabili sensibili non sono vuote. Non stampa
 mai i valori, solo la loro lunghezza.
 
+<a id="9"></a>
+## 9. Un'espressione regolare globale non si condivide
+
+`analizza`, in `lib/testo-ricco.ts`, richiama sé stessa per leggere il contenuto del
+grassetto. La regola era una costante di modulo, con il modificatore `g`: le regole
+globali si portano dietro la posizione raggiunta (`lastIndex`), quindi la chiamata
+annidata la riazzerava e quella esterna ripartiva da capo. **Ciclo infinito su qualunque
+testo contenente `**grassetto**`** — cioè su metà delle pagine legali.
+
+**Come si riconosce:** la richiesta non torna e la memoria del processo cresce finché
+Node si arrende con «heap out of memory». Nessuno stack utile: il ciclo è in codice
+proprio, non in una libreria.
+
+**Rimedio:** una funzione che restituisce il letterale, così ogni chiamata ha la sua
+regola. Vale in generale: **una `RegExp` con `g` o `y` è un oggetto con stato**, e
+condividerla fra chiamate che possono annidarsi è un errore silenzioso.
+
+**Come è stato trovato:** non a mano, ma da `npm run prova-pagine`, alla prima prova che
+leggeva del grassetto. Le pagine che avevo aperto per controllare — «Lo studio» e le
+note legali — non ne contengono: senza quella prova sarebbe finito online.
+
 ---
 
 ## Il filo comune
 
-Sette problemi, un'unica morale: **ognuno falliva in modo silenzioso o fuorviante.**
+Nove problemi, un'unica morale: **ognuno falliva in modo silenzioso o fuorviante.**
 
 Il tempo non se n'è andato a scrivere le correzioni — quelle sono poche righe ciascuna. Se
-n'è andato a capire *quale* dei sette stesse parlando, perché i sintomi si somigliavano e
+n'è andato a capire *quale* stesse parlando, perché i sintomi si somigliavano e
 si mascheravano a vicenda.
 
 Quello che ha sbloccato la situazione è stato, ogni volta, **rendere il programma esplicito

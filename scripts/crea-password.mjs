@@ -15,7 +15,8 @@
  */
 
 import { createInterface } from 'node:readline/promises'
-import { writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
+import { basename } from 'node:path'
 import { stdin, stdout } from 'node:process'
 
 // Deve corrispondere a ITERAZIONI_PREDEFINITE in lib/admin/auth.ts.
@@ -108,8 +109,30 @@ const intestazione = temporanee
   ? '# Credenziali TEMPORANEE della console — da sostituire.\n'
   : '# Credenziali della console.\n'
 
+const archivio = new URL('../.credenziali-console.txt', import.meta.url)
+
+/**
+ * Il file precedente si mette da parte, non si sovrascrive.
+ *
+ * Quel file è l'unico posto in cui resta scritta la password in chiaro: dell'impronta
+ * non si torna indietro. Chi rigenera le credenziali per rimetterle a posto in locale
+ * cancellerebbe, senza accorgersene, l'unica copia di quella con cui il sito
+ * pubblicato funziona ancora — perché i Secret su Cloudflare restano quelli di prima
+ * finché non si esegue `npm run admin:imposta`.
+ */
+try {
+  const precedente = await readFile(archivio, 'utf8')
+  const quando = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')
+  const copia = new URL(`../.credenziali-console.${quando}.txt`, import.meta.url)
+  await writeFile(copia, precedente, 'utf8')
+  console.log(`\nLe credenziali precedenti sono state messe da parte in ${basename(copia.pathname)}`)
+  console.log('Restano quelle valide sul sito pubblicato finché non esegui admin:imposta.')
+} catch (errore) {
+  if (errore?.code !== 'ENOENT') throw errore
+}
+
 await writeFile(
-  new URL('../.credenziali-console.txt', import.meta.url),
+  archivio,
   intestazione +
     '# NON versionare, NON condividere.\n' +
     `# Password: ${password}\n\n` +

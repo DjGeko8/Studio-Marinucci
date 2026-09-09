@@ -10,7 +10,7 @@
     "build:turbopack": "next build",
     "start": "next start -p 8320",
     "typecheck": "tsc --noEmit",
-    "verifica": "npm run typecheck && npm run verifica-segnaposto && npm run verifica-immagini",
+    "verifica": "npm run typecheck && npm run prova-pagine && npm run verifica-segnaposto && npm run verifica-immagini",
     "verifica-segnaposto": "node scripts/verifica-segnaposto.mjs",
     "verifica-immagini": "node scripts/verifica-immagini.mjs",
     "verifica-file-immagini": "node scripts/verifica-file-immagini.mjs",
@@ -20,7 +20,8 @@
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "node scripts/verifica-segreti.mjs && opennextjs-cloudflare deploy",
     "cf:tipi": "wrangler types",
-    "admin:imposta": "node scripts/imposta-secret.mjs"
+    "admin:imposta": "node scripts/imposta-secret.mjs",
+    "prova-pagine": "node scripts/esegui-ts.mjs scripts/prova-pagine.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

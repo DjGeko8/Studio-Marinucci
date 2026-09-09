@@ -54,7 +54,7 @@ export function Footer() {
                 PEC <Tbd>{contatti.pec}</Tbd>
               </p>
               <p>
-                Polizza RC professionale: <Tbd>{datiObbligatori.polizzaRc}</Tbd>
+                Polizza RC professionale: <Tbd>{datiObbligatori.polizza.compagnia}</Tbd>
               </p>
             </div>
           </div>

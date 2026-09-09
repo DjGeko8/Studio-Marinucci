@@ -88,8 +88,9 @@ export function SectionHeading({
   as: As = 'h2',
 }: {
   eyebrow?: string
-  title: string
-  intro?: string
+  /** Titolo e introduzione accettano elementi: possono contenere campi automatici. */
+  title: ReactNode
+  intro?: ReactNode
   tone?: 'light' | 'dark'
   align?: 'left' | 'center'
   as?: 'h1' | 'h2' | 'h3'

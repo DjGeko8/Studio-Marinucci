@@ -1,0 +1,389 @@
+{
+  "_nota": "Testi discorsivi delle pagine, modificabili dalla console in /admin. I dati obbligatori (partita IVA, PEC, iscrizione all'albo, estremi della polizza, titolare del trattamento) NON stanno qui: sono generati da lib/site.ts e stampati dalle pagine, perche' la legge impone che ci siano e un testo libero e' il posto sbagliato per qualcosa che non puo' mancare. Nei testi si citano con i campi automatici indicati fra doppie graffe, elencati in lib/testo-ricco.ts.",
+  "pagine": {
+    "studio": {
+      "occhiello": "Il professionista",
+      "titolo": "Lo studio",
+      "sommario": "Lo studio del {{nomeCompleto}} opera a {{citta}} e assiste imprese, professionisti e privati del basso Molise.",
+      "metaDescrizione": "Dottore commercialista a Termoli, iscritto all’albo ODCEC di Larino dal 2001 e revisore legale. Percorso professionale e modo di lavorare dello studio.",
+      "sezioni": [
+        {
+          "id": "percorso",
+          "occhiello": "Percorso",
+          "titolo": "Massimo Marinucci",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Nato a {{cittaNascita}} nel {{annoNascita}}, si è laureato in {{laurea}} ed è iscritto all’{{ordine}} dal {{dataIscrizione}}, al numero {{numeroAlbo}}."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "È inoltre iscritto al Registro dei Revisori Legali, al n. {{numeroRevisori}}, e può assumere incarichi di revisione legale dei conti e di componente di collegi sindacali."
+            }
+          ]
+        },
+        {
+          "id": "metodo",
+          "titolo": "Come lavora lo studio",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il lavoro parte sempre da un colloquio: capire l’attività, la struttura e gli obiettivi di chi si rivolge allo studio viene prima di qualunque adempimento. Da lì si definisce cosa serve davvero, senza sovrapporre servizi non necessari."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Gli adempimenti fiscali e contabili sono la parte visibile del lavoro. La parte utile è l’altra: arrivare alle scadenze avendo già deciso, invece di decidere sotto scadenza."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Il rapporto è diretto e continuativo. Non ci sono passaggi di consegne: chi chiama parla con il professionista che segue la pratica, e questo vale sia per la gestione ordinaria sia per le questioni straordinarie."
+            }
+          ]
+        },
+        {
+          "id": "incarichi",
+          "occhiello": "Incarichi e attività",
+          "titolo": "Incarichi ricoperti",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Sezione da compilare esclusivamente con incarichi reali: collegi sindacali, revisione di enti, consulenze tecniche d’ufficio, curatele, gestione della crisi da sovraindebitamento, docenze, pubblicazioni."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "«TBD:INCARICHI»"
+            }
+          ]
+        },
+        {
+          "id": "spazio",
+          "occhiello": "Lo spazio",
+          "titolo": "Dove si lavora",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Gli incontri si tengono in studio, a {{citta}}. Chi preferisce può chiedere una videochiamata: per molte questioni è sufficiente, e fa risparmiare un viaggio."
+            }
+          ]
+        },
+        {
+          "id": "chiusura",
+          "titolo": "Un primo colloquio, senza impegno",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Per capire se lo studio è l’interlocutore giusto, la strada più breve è parlarne."
+            }
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "occhiello": "Protezione dei dati",
+      "titolo": "Informativa privacy",
+      "sommario": "Come vengono trattati i dati personali raccolti attraverso questo sito, ai sensi degli articoli 13 e 14 del Regolamento UE 2016/679.",
+      "metaDescrizione": "Informativa sul trattamento dei dati personali ai sensi degli articoli 13 e 14 del Regolamento UE 2016/679.",
+      "sezioni": [
+        {
+          "id": "titolare",
+          "titolo": "Titolare del trattamento",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il titolare del trattamento è {{nomeCompleto}}, {{titolo}}, con studio in {{sede}}."
+            }
+          ]
+        },
+        {
+          "id": "dati-raccolti",
+          "titolo": "Quali dati vengono raccolti",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il sito raccoglie dati personali soltanto quando è l’interessato a fornirli, compilando il modulo di contatto o quello di richiesta appuntamento. I dati richiesti sono: nome e cognome, indirizzo email, eventualmente il numero di telefono, l’oggetto della richiesta e il testo del messaggio."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Il modulo invita espressamente a non inserire dati sensibili o documenti riservati: per la trasmissione di documentazione fiscale si concorda un canale adeguato dopo il primo contatto."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Il sito non utilizza strumenti di analisi statistica di terze parti, non profila i visitatori e non impiega cookie di marketing. I caratteri tipografici sono ospitati sul dominio del sito: la loro visualizzazione non comporta alcuna connessione verso fornitori esterni."
+            }
+          ]
+        },
+        {
+          "id": "finalita",
+          "titolo": "Finalità e base giuridica",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "I dati inviati tramite i moduli sono trattati per **dare riscontro alla richiesta** e, se del caso, per valutare l’eventuale conferimento di un incarico professionale. La base giuridica è l’esecuzione di misure precontrattuali adottate su richiesta dell’interessato (art. 6, par. 1, lett. b del Regolamento)."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Il caricamento della mappa presente nella pagina «Dove siamo» avviene esclusivamente sulla base del **consenso** (art. 6, par. 1, lett. a), revocabile in ogni momento dalla [cookie policy](/cookie-policy)."
+            }
+          ]
+        },
+        {
+          "id": "conferimento",
+          "titolo": "Conferimento dei dati",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il conferimento dei dati contrassegnati come obbligatori nel modulo è necessario per poter rispondere: senza di essi la richiesta non può essere evasa. Il conferimento del numero di telefono è facoltativo."
+            }
+          ]
+        },
+        {
+          "id": "conservazione",
+          "titolo": "Periodo di conservazione",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Le richieste che non danno luogo a un rapporto professionale sono conservate per il tempo necessario a gestire il riscontro e comunque non oltre «TBD:CONSERVAZIONE» mesi. Se dalla richiesta nasce un incarico, i dati confluiscono nel rapporto professionale e sono conservati secondo i termini di legge applicabili a quell’attività, indicati nell’informativa consegnata al conferimento dell’incarico."
+            }
+          ]
+        },
+        {
+          "id": "destinatari",
+          "titolo": "Destinatari",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "I dati non sono diffusi e non sono comunicati a terzi per finalità proprie di questi ultimi. Possono venirne a conoscenza i fornitori di servizi tecnici che operano per conto del titolare — in particolare il fornitore di hosting e il fornitore del servizio di posta elettronica — nominati responsabili del trattamento ai sensi dell’articolo 28 del Regolamento."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "«TBD:HOSTING» — l’elenco dei fornitori va completato una volta scelto l’hosting, indicando anche se il trattamento avviene interamente nello Spazio economico europeo."
+            }
+          ]
+        },
+        {
+          "id": "trasferimenti",
+          "titolo": "Trasferimenti extra UE",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Non sono previsti trasferimenti di dati personali verso Paesi terzi, salvo quanto eventualmente derivante dal caricamento volontario della mappa esterna, che avviene solo previo consenso."
+            }
+          ]
+        },
+        {
+          "id": "diritti",
+          "titolo": "Diritti dell’interessato",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "L’interessato può esercitare in ogni momento i diritti previsti dagli articoli da 15 a 22 del Regolamento: accesso ai propri dati, rettifica, cancellazione, limitazione del trattamento, portabilità e opposizione. Quando il trattamento si fonda sul consenso, questo è revocabile in qualsiasi momento, senza che ciò pregiudichi la liceità del trattamento effettuato prima della revoca."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Le richieste vanno indirizzate al titolare ai recapiti indicati in apertura. È inoltre riconosciuto il diritto di proporre reclamo al Garante per la protezione dei dati personali (Piazza Venezia 11, 00187 Roma — [gpdp.it](https://www.gpdp.it))."
+            }
+          ]
+        },
+        {
+          "id": "decisioni-automatizzate",
+          "titolo": "Processi decisionali automatizzati",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Non sono effettuati processi decisionali automatizzati né attività di profilazione."
+            }
+          ]
+        },
+        {
+          "id": "sicurezza",
+          "titolo": "Sicurezza",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il sito è servito esclusivamente su connessione cifrata. Il modulo di contatto adotta misure antispam che non richiedono all’utente di risolvere test o enigmi. I dati personali non sono mai inseriti in indirizzi di pagina o in parametri di ricerca."
+            }
+          ]
+        },
+        {
+          "id": "aggiornamenti",
+          "titolo": "Aggiornamenti",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "La presente informativa può essere aggiornata. La versione pubblicata su questa pagina è quella vigente."
+            }
+          ]
+        }
+      ]
+    },
+    "cookie-policy": {
+      "occhiello": "Cookie e strumenti simili",
+      "titolo": "Cookie policy",
+      "sommario": "Il sito non usa cookie di profilazione e non impiega strumenti di analisi di terze parti. Il consenso è richiesto per una sola cosa: la mappa.",
+      "metaDescrizione": "Quali cookie e strumenti di memorizzazione utilizza il sito, e come gestire il consenso ai contenuti esterni.",
+      "sezioni": [
+        {
+          "id": "memorizza",
+          "titolo": "Cosa memorizza il sito",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il sito utilizza un unico elemento di memorizzazione, tecnicamente necessario: una voce nella memoria locale del browser che conserva la scelta espressa sul consenso ai contenuti esterni. Serve a non riproporre il banner a ogni pagina. Non contiene dati identificativi, non viene trasmessa ad alcun server e resta sul dispositivo di chi visita."
+            }
+          ]
+        },
+        {
+          "id": "non-fa",
+          "titolo": "Cosa il sito non fa",
+          "blocchi": [
+            {
+              "tipo": "elenco",
+              "voci": [
+                "non installa cookie di profilazione o di marketing;",
+                "non impiega strumenti di analisi statistica di terze parti, né in forma anonimizzata;",
+                "non carica caratteri tipografici, immagini o script da domini esterni: i font sono ospitati sul dominio del sito;",
+                "non condivide dati con circuiti pubblicitari."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mappa",
+          "titolo": "Contenuti esterni: la mappa",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "L’unico contenuto di terze parti previsto è la mappa presente nella pagina «Dove siamo», ospitata da OpenStreetMap. Caricandola, il browser si collega ai server di quel servizio, che viene così a conoscenza dell’indirizzo IP del visitatore e delle informazioni tecniche normalmente trasmesse in una richiesta web."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "Per questa ragione la mappa **non viene caricata** finché il consenso non è stato prestato. Rifiutando, la pagina resta pienamente utilizzabile: l’indirizzo dello studio è leggibile in chiaro ed è disponibile un collegamento esterno da aprire, se lo si desidera, in modo consapevole."
+            }
+          ]
+        },
+        {
+          "id": "gestire",
+          "titolo": "Gestire o revocare il consenso",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "La scelta può essere modificata in qualunque momento dal pannello qui sotto. La revoca ha effetto immediato: i contenuti esterni tornano a non essere caricati."
+            }
+          ]
+        },
+        {
+          "id": "browser",
+          "titolo": "Impostazioni del browser",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "È inoltre possibile gestire o cancellare i dati memorizzati dai siti direttamente dalle impostazioni del proprio browser. La cancellazione della memoria locale comporta anche la rimozione della scelta espressa su questo sito: alla visita successiva il banner sarà nuovamente proposto."
+            }
+          ]
+        },
+        {
+          "id": "rinvio-privacy",
+          "titolo": "Trattamento dei dati personali",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Per ogni altro aspetto relativo al trattamento dei dati personali si rinvia all’[informativa privacy](/privacy)."
+            }
+          ]
+        }
+      ]
+    },
+    "note-legali": {
+      "occhiello": "Trasparenza",
+      "titolo": "Note legali",
+      "sommario": "Dati identificativi dell’esercente la professione, estremi di iscrizione all’albo e della copertura assicurativa.",
+      "metaDescrizione": "Dati identificativi dell’esercente la professione, estremi di iscrizione all’albo e della polizza di responsabilità civile professionale.",
+      "sezioni": [
+        {
+          "id": "esercente",
+          "titolo": "Esercente la professione",
+          "blocchi": []
+        },
+        {
+          "id": "assicurazione",
+          "titolo": "Assicurazione per la responsabilità civile professionale",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Ai sensi dell’articolo 5 del D.P.R. 7 agosto 2012, n. 137, si rendono noti gli estremi della polizza di assicurazione per i danni derivanti dall’esercizio dell’attività professionale."
+            }
+          ]
+        },
+        {
+          "id": "norme",
+          "titolo": "Norme professionali di riferimento",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "L’attività è disciplinata dal decreto legislativo 28 giugno 2005, n. 139, istitutivo dell’Ordine dei Dottori Commercialisti e degli Esperti Contabili, dal D.P.R. 7 agosto 2012, n. 137 in materia di riforma degli ordinamenti professionali e dal Codice deontologico della professione, ai quali si fa rinvio. Il testo del Codice deontologico è consultabile sul sito del Consiglio Nazionale dei Dottori Commercialisti e degli Esperti Contabili."
+            }
+          ]
+        },
+        {
+          "id": "natura",
+          "titolo": "Natura delle informazioni pubblicate",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "I contenuti di questo sito hanno finalità esclusivamente informative. Non costituiscono parere professionale né consulenza riferita a un caso concreto, e non sono idonei a fondare decisioni senza un esame specifico della singola situazione. La consultazione del sito non instaura alcun rapporto professionale."
+            },
+            {
+              "tipo": "paragrafo",
+              "testo": "La normativa fiscale è soggetta a modifiche frequenti: le informazioni pubblicate si riferiscono al momento della loro redazione e possono non essere più attuali."
+            }
+          ]
+        },
+        {
+          "id": "comunicazione",
+          "titolo": "Comunicazione informativa",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Le informazioni contenute in questo sito sono diffuse nel rispetto dei limiti posti alla comunicazione informativa dell’esercente la professione: rispondono a criteri di verità, correttezza e trasparenza, non contengono riferimenti comparativi con altri professionisti né elementi idonei a suggerire il conseguimento di determinati risultati."
+            }
+          ]
+        },
+        {
+          "id": "proprieta",
+          "titolo": "Proprietà dei contenuti",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "I testi, le immagini e gli altri materiali pubblicati sono protetti dalle norme sul diritto d’autore. Ne è consentita la consultazione personale; ogni riproduzione, anche parziale, per finalità diverse richiede l’autorizzazione del titolare."
+            }
+          ]
+        },
+        {
+          "id": "collegamenti",
+          "titolo": "Collegamenti a siti esterni",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Il sito può contenere collegamenti a risorse esterne. Il titolare non esercita alcun controllo su tali risorse e non risponde dei loro contenuti né delle modalità con cui trattano i dati dei visitatori."
+            }
+          ]
+        },
+        {
+          "id": "rinvio-privacy",
+          "titolo": "Trattamento dei dati personali",
+          "blocchi": [
+            {
+              "tipo": "paragrafo",
+              "testo": "Per il trattamento dei dati personali si rinvia all’[informativa privacy](/privacy) e alla [cookie policy](/cookie-policy)."
+            }
+          ]
+        },
+        {
+          "id": "titolare-sito",
+          "titolo": "Titolare del sito",
+          "blocchi": []
+        }
+      ]
+    }
+  }
+}
