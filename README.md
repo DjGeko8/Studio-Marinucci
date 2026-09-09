@@ -338,9 +338,11 @@ nessuno — che è il modo giusto di sbagliare.
 L'adattatore OpenNext copia dentro il pacchetto le variabili d'ambiente presenti al
 momento della compilazione — **compreso il contenuto di `.env.local`**. Chi compilasse
 in locale e poi lanciasse `cf:deploy` pubblicherebbe la propria password dentro il
-Worker, dove per giunta avrebbe la precedenza sui Secret impostati nel pannello. Il
-sito continuerebbe a funzionare: è il tipo di errore che non si nota finché non è
-tardi.
+codice del Worker, leggibile da chiunque ne ottenga una copia.
+
+I Secret del pannello continuerebbero a funzionare — l'adattatore applica prima quelli
+della piattaforma e usa i valori compilati solo per riempire i buchi — quindi il sito
+non darebbe segno di nulla. È il tipo di errore che non si nota finché non è tardi.
 
 Non succede quando compila Cloudflare, perché `.env.local` non è nel repository. Ma
 «di solito non succede» non è una difesa, quindi `npm run cf:deploy` esegue prima un
