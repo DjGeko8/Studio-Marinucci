@@ -4,7 +4,12 @@ import { Accesso } from '@/components/admin/Accesso'
 import { Esci } from '@/components/admin/Esci'
 import { NavConsole } from '@/components/admin/NavConsole'
 import { Container } from '@/components/ui'
-import { COOKIE_SESSIONE, configurazioneConsole, sessioneValida } from '@/lib/admin/auth'
+import {
+  COOKIE_SESSIONE,
+  configurazioneConsole,
+  diagnosiConsole,
+  sessioneValida,
+} from '@/lib/admin/auth'
 import { site } from '@/lib/site'
 
 /**
@@ -23,7 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ? await sessioneValida((await cookies()).get(COOKIE_SESSIONE)?.value, cfg.segretoSessione)
     : false
 
-  if (!dentro) return <Accesso configurata={cfg !== null} />
+  if (!dentro) return <Accesso configurata={cfg !== null} problemi={diagnosiConsole()} />
 
   return (
     <div className="min-h-screen bg-paper">

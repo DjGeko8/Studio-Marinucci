@@ -157,3 +157,45 @@ export function configurazioneConsole(): ConfigurazioneConsole | null {
 
   return { email, hashPassword, segretoSessione }
 }
+
+/**
+ * Cosa manca, esattamente.
+ *
+ * Un messaggio unico per tre cause diverse manda a cercare nel posto sbagliato:
+ * «mancano le variabili» detto a chi le ha appena impostate tutte fa pensare a un
+ * problema di Cloudflare, quando magari il segreto di sessione è solo troppo corto.
+ *
+ * Qui si dice quale variabile non arriva e perché. Non si mostra mai un valore:
+ * solo se è presente, e per il segreto quanti caratteri ha — che serve a capire se
+ * è stato incollato per intero.
+ */
+export function diagnosiConsole(): string[] {
+  const problemi: string[] = []
+
+  const email = process.env.ADMIN_EMAIL?.trim()
+  if (!email) problemi.push('ADMIN_EMAIL non arriva al server (assente o vuota).')
+  else if (!email.includes('@')) problemi.push('ADMIN_EMAIL non sembra un indirizzo email.')
+
+  const hash = process.env.ADMIN_PASSWORD_HASH?.trim()
+  if (!hash) {
+    problemi.push('ADMIN_PASSWORD_HASH non arriva al server (assente o vuota).')
+  } else if (hash.split(':').length !== 3) {
+    problemi.push(
+      'ADMIN_PASSWORD_HASH non ha la forma attesa «iterazioni:salt:impronta». ' +
+        'Va incollato per intero il valore prodotto da `npm run admin:password`, ' +
+        'non la password.',
+    )
+  }
+
+  const segreto = process.env.ADMIN_SESSION_SECRET?.trim()
+  if (!segreto) {
+    problemi.push('ADMIN_SESSION_SECRET non arriva al server (assente o vuota).')
+  } else if (segreto.length < 32) {
+    problemi.push(
+      `ADMIN_SESSION_SECRET è di ${segreto.length} caratteri: ne servono almeno 32. ` +
+        'Probabilmente è stato incollato solo in parte.',
+    )
+  }
+
+  return problemi
+}

@@ -13,7 +13,14 @@ import { professionista, site } from '@/lib/site'
  * committente, resa però con i nostri token — verde petrolio e ottone, non i suoi
  * colori.
  */
-export function Accesso({ configurata }: { configurata: boolean }) {
+export function Accesso({
+  configurata,
+  problemi = [],
+}: {
+  configurata: boolean
+  /** Cosa manca esattamente, quando la console non è configurata. */
+  problemi?: string[]
+}) {
   const [inCorso, setInCorso] = useState(false)
   const [errore, setErrore] = useState('')
 
@@ -83,11 +90,18 @@ export function Accesso({ configurata }: { configurata: boolean }) {
             {!configurata ? (
               <div className="mt-8 border-l-2 border-brass bg-paper-warm px-5 py-4 text-body-sm text-ink-soft">
                 <p className="text-ink">La console non è ancora configurata.</p>
-                <p className="mt-2">
-                  Mancano le variabili d&apos;ambiente <code>ADMIN_EMAIL</code>,{' '}
-                  <code>ADMIN_PASSWORD_HASH</code> e <code>ADMIN_SESSION_SECRET</code>. Si
-                  generano con <code>npm run admin:password</code> e si impostano come
-                  «Secret» nel Worker su Cloudflare. Istruzioni nel README.
+                {problemi.length > 0 ? (
+                  <ul className="mt-3 list-disc space-y-1.5 pl-5">
+                    {problemi.map((p) => (
+                      <li key={p}>{p}</li>
+                    ))}
+                  </ul>
+                ) : null}
+                <p className="mt-3">
+                  I valori si generano con <code>npm run admin:password</code> e si
+                  impostano come <strong>Secret</strong> nel Worker su Cloudflare — non
+                  come «Text», che al prossimo rilascio verrebbero sostituiti da quelli
+                  scritti in <code>wrangler.jsonc</code>. Istruzioni nel README.
                 </p>
               </div>
             ) : (
