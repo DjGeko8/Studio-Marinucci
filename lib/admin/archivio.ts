@@ -229,7 +229,14 @@ export async function scriviDocumenti(
     'Content-Type': 'application/json',
   }
 
-  async function chiedi(percorso: string, init?: RequestInit): Promise<Record<string, unknown>> {
+  // Costante e non `function`: una funzione dichiarata viene sollevata in cima allo
+  // scope, quindi TypeScript deve considerarla chiamabile prima del controllo su
+  // `cfg` e lì il tipo comprende ancora `null`. Una costante non è sollevata, e la
+  // restrizione di tipo fatta sopra vale anche dentro.
+  const chiedi = async (
+    percorso: string,
+    init?: RequestInit,
+  ): Promise<Record<string, unknown>> => {
     const risposta = await fetch(`${base}${percorso}`, { ...init, headers: intestazioni })
     if (!risposta.ok) throw erroreGitHub(risposta.status, percorso, cfg)
     return (await risposta.json()) as Record<string, unknown>
