@@ -96,6 +96,40 @@ function erroreSenzaArchivio(causa: unknown): Error {
   return new Error(SENZA_ARCHIVIO + dettaglio)
 }
 
+/**
+ * Traduce la risposta di GitHub in qualcosa di azionabile.
+ *
+ * I tre codici che si incontrano vogliono dire cose molto diverse, e confonderli
+ * manda a cercare nel posto sbagliato: 401 è il token, 403 sono i permessi, 404 è
+ * il repository — o, su un repository privato, ancora i permessi, perché GitHub
+ * risponde 404 anziché 403 per non rivelare che esiste.
+ */
+function erroreGitHub(stato: number, percorso: string, cfg: ConfigurazioneGitHub): Error {
+  const dove = `${cfg.proprietario}/${cfg.repository}`
+  switch (stato) {
+    case 401:
+      return new Error(
+        'GitHub ha rifiutato il token (401). Il valore di GITHUB_TOKEN non è valido: ' +
+          'di solito è scaduto, revocato, oppure è stato incollato incompleto. ' +
+          'Ne generi uno nuovo e lo reimposti come Secret.',
+      )
+    case 403:
+      return new Error(
+        `Il token è valido ma non ha i permessi necessari su ${dove} (403). ` +
+          'Serve il permesso «Contents: Read and write». Se è un token fine-grained, ' +
+          'verifichi anche che questo repository sia fra quelli selezionati.',
+      )
+    case 404:
+      return new Error(
+        `GitHub non trova ${dove} (404). O GITHUB_REPO è scritto male — va nella forma ` +
+          '«proprietario/repository» — oppure il token non ha accesso a questo ' +
+          'repository: se è privato, GitHub risponde 404 invece di 403.',
+      )
+    default:
+      return new Error(`GitHub ha risposto ${stato} leggendo ${percorso}.`)
+  }
+}
+
 export type Documento = {
   contenuto: string
   /** Identificativo della versione letta. Serve a evitare sovrascritture cieche. */
@@ -127,9 +161,7 @@ export async function leggiDocumento(percorso: string): Promise<Documento> {
   const cfg = configurazioneGitHub()
   if (cfg) {
     const risposta = await chiamaGitHub(cfg, `${percorso}?ref=${encodeURIComponent(cfg.ramo)}`)
-    if (!risposta.ok) {
-      throw new Error(`Lettura da GitHub non riuscita (${risposta.status}) per ${percorso}`)
-    }
+    if (!risposta.ok) throw erroreGitHub(risposta.status, percorso, cfg)
     const dato = (await risposta.json()) as { content?: string; sha?: string }
     if (typeof dato.content !== 'string') throw new Error(`${percorso} non è un file.`)
     return { contenuto: daBase64(dato.content), versione: dato.sha ?? null }
@@ -199,9 +231,7 @@ export async function scriviDocumenti(
 
   async function chiedi(percorso: string, init?: RequestInit): Promise<Record<string, unknown>> {
     const risposta = await fetch(`${base}${percorso}`, { ...init, headers: intestazioni })
-    if (!risposta.ok) {
-      throw new Error(`GitHub ha risposto ${risposta.status} su ${percorso}`)
-    }
+    if (!risposta.ok) throw erroreGitHub(risposta.status, percorso, cfg)
     return (await risposta.json()) as Record<string, unknown>
   }
 
@@ -276,9 +306,7 @@ export async function scriviDocumento(
           'Ricarichi la console e ripeta la modifica, così non si sovrascrive il lavoro altrui.',
       )
     }
-    if (!risposta.ok) {
-      throw new Error(`Scrittura su GitHub non riuscita (${risposta.status}).`)
-    }
+    if (!risposta.ok) throw erroreGitHub(risposta.status, percorso, cfg)
 
     const dato = (await risposta.json()) as { content?: { sha?: string } }
     return { modalita: 'github', versione: dato.content?.sha ?? null }
