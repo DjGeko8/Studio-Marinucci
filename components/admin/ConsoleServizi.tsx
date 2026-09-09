@@ -143,7 +143,9 @@ export function ConsoleServizi() {
 
       {modalita === 'locale' ? (
         <p className="mt-6 border-l-2 border-line-strong bg-stone px-4 py-3 text-body-sm text-ink-soft">
-          Modalità locale: le modifiche vanno sul file di questo computer.
+          <strong>GitHub non è collegato.</strong> In sviluppo si scrive sui file di questo
+          computer; sul sito pubblicato il salvataggio fallisce. Servono
+          <code>GITHUB_TOKEN</code> e <code>GITHUB_REPO</code>.
         </p>
       ) : null}
 

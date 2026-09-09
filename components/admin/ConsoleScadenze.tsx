@@ -168,9 +168,10 @@ export function ConsoleScadenze() {
 
       {modalita === 'locale' ? (
         <p className="mt-6 border-l-2 border-line-strong bg-stone px-4 py-3 text-body-sm text-ink-soft">
-          Modalità locale: le modifiche vanno sul file di questo computer, non sul sito
-          pubblicato. In produzione servono <code>GITHUB_TOKEN</code> e{' '}
-          <code>GITHUB_REPO</code>.
+          <strong>GitHub non è collegato.</strong> In sviluppo le modifiche vanno sui file
+          di questo computer; sul sito pubblicato non c&apos;è un disco su cui scriverle e
+          il salvataggio fallisce. Servono <code>GITHUB_TOKEN</code> e{' '}
+          <code>GITHUB_REPO</code> come Secret nel Worker.
         </p>
       ) : null}
 

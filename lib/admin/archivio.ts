@@ -78,6 +78,24 @@ function daBase64(base64: string): string {
   return decodificatore.decode(byte)
 }
 
+/**
+ * Il ripiego sul filesystem vale SOLO in sviluppo.
+ *
+ * Un Worker non ha un disco: `process.cwd()` vale `/bundle` e qualunque lettura
+ * fallisce con «no such file or directory». Senza questo messaggio l'errore
+ * arrivava all'utente così com'era — un percorso incomprensibile, che non diceva
+ * la cosa importante: manca la configurazione di GitHub.
+ */
+const SENZA_ARCHIVIO =
+  'La console non è collegata a GitHub, e sul sito pubblicato non esiste un disco da ' +
+  'cui leggere i contenuti. Servono le variabili GITHUB_TOKEN e GITHUB_REPO, impostate ' +
+  'come Secret nel Worker. Il ripiego sui file locali funziona soltanto in sviluppo.'
+
+function erroreSenzaArchivio(causa: unknown): Error {
+  const dettaglio = causa instanceof Error ? ` (${causa.message})` : ''
+  return new Error(SENZA_ARCHIVIO + dettaglio)
+}
+
 export type Documento = {
   contenuto: string
   /** Identificativo della versione letta. Serve a evitare sovrascritture cieche. */
@@ -121,7 +139,11 @@ export async function leggiDocumento(percorso: string): Promise<Documento> {
   if (!assoluto.startsWith(join(process.cwd(), 'content') + sep)) {
     throw new Error(`Percorso fuori da content/: ${percorso}`)
   }
-  return { contenuto: await readFile(assoluto, 'utf8'), versione: null }
+  try {
+    return { contenuto: await readFile(assoluto, 'utf8'), versione: null }
+  } catch (causa) {
+    throw erroreSenzaArchivio(causa)
+  }
 }
 
 /**
@@ -152,11 +174,15 @@ export async function scriviDocumenti(
       if (!assoluto.startsWith(join(process.cwd(), 'content') + sep)) {
         throw new Error(`Percorso fuori da content/: ${f.percorso}`)
       }
-      if (f.contenuto === null) {
-        await rm(assoluto, { force: true })
-      } else {
-        await mkdir(dirname(assoluto), { recursive: true })
-        await writeFile(assoluto, f.contenuto, 'utf8')
+      try {
+        if (f.contenuto === null) {
+          await rm(assoluto, { force: true })
+        } else {
+          await mkdir(dirname(assoluto), { recursive: true })
+          await writeFile(assoluto, f.contenuto, 'utf8')
+        }
+      } catch (causa) {
+        throw erroreSenzaArchivio(causa)
       }
     }
     return { modalita: 'locale' }
@@ -262,6 +288,10 @@ export async function scriviDocumento(
   if (!assoluto.startsWith(join(process.cwd(), 'content') + sep)) {
     throw new Error(`Percorso fuori da content/: ${percorso}`)
   }
-  await writeFile(assoluto, contenuto, 'utf8')
+  try {
+    await writeFile(assoluto, contenuto, 'utf8')
+  } catch (causa) {
+    throw erroreSenzaArchivio(causa)
+  }
   return { modalita: 'locale', versione: null }
 }
