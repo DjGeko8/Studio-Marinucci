@@ -362,6 +362,31 @@ computer e lo dichiara a schermo. Per provarla basta un file `.env.local` con
 `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` e `ADMIN_SESSION_SECRET` (`.env.local` è
 escluso dal repository).
 
+### ⚠️ Un limite della piattaforma che ha plasmato una scelta
+
+I Worker del **piano gratuito hanno 10 ms di CPU per richiesta**. Misurato: 210.000
+iterazioni di PBKDF2 ne costano circa 97, e infatti l'accesso restituiva un errore 500
+dal corpo vuoto — il Worker veniva interrotto a metà del calcolo.
+
+Le iterazioni sono quindi scese a **8.000**, circa 3 ms.
+
+Va detto con precisione cosa si perde. Le iterazioni rendono costoso il tentativo a
+forza bruta su un'impronta **trapelata**, e contano soprattutto per le password scelte
+da una persona, che hanno poca entropia. Su una password casuale di 24 caratteri il
+numero di iterazioni è quasi irrilevante: lo spazio da esplorare resta fuori portata.
+
+Da qui la contropartita, che non è facoltativa: **la password dev'essere lunga e
+casuale.** `npm run admin:password` ne genera una di 24 caratteri, e il minimo accettato
+per quelle scelte a mano è salito a 16.
+
+Su un piano Workers **a pagamento** il limite di CPU è configurabile fino a 5 minuti.
+Lì si può tornare a 210.000 iterazioni: si alza `ITERAZIONI_PREDEFINITE` e
+`ITERAZIONI_MASSIME` in `lib/admin/auth.ts`, si aggiunge `"limits": { "cpu_ms": 200 }`
+in `wrangler.jsonc`, e si rigenera l'impronta.
+
+Un'impronta creata con troppe iterazioni non fa più morire il Worker: viene rifiutata
+prima, e la pagina di accesso spiega che va rigenerata.
+
 ### Cosa protegge l'accesso
 
 - password conservata come impronta PBKDF2 a 210.000 iterazioni, mai in chiaro;

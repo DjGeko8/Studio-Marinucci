@@ -28,7 +28,40 @@
  *   quali indirizzi sono validi.
  */
 
-const ITERAZIONI_PREDEFINITE = 210_000
+/**
+ * ITERAZIONI DI PBKDF2 — un compromesso imposto dalla piattaforma, non una svista.
+ *
+ * I Worker del piano gratuito hanno 10 ms di CPU per richiesta. Misurato: 210.000
+ * iterazioni costano circa 97 ms, e infatti l'accesso restituiva 500 con il corpo
+ * vuoto — il Worker veniva terminato a metà. A 8.000 iterazioni siamo intorno ai
+ * 3 ms, che lascia margine per il resto della richiesta.
+ *
+ * Ottomila è molto sotto le raccomandazioni correnti, che per PBKDF2-SHA256 parlano
+ * di centinaia di migliaia. Vale la pena essere precisi su cosa si perde: le
+ * iterazioni servono a rendere costoso il tentativo a forza bruta su un'impronta
+ * TRAPELATA, e contano soprattutto per le password scelte da una persona, che hanno
+ * poca entropia. Su una password casuale di 24 caratteri il numero di iterazioni è
+ * quasi irrilevante: lo spazio da esplorare resta fuori portata comunque.
+ *
+ * Da qui la contropartita, che non è facoltativa: **la password dev'essere lunga e
+ * casuale**. `npm run admin:password` ne genera una di 24 caratteri, e il minimo
+ * accettato per quelle scelte a mano è salito a 16.
+ *
+ * Su un piano Workers a pagamento il limite di CPU è configurabile fino a 5 minuti
+ * (`limits.cpu_ms` in wrangler.jsonc): lì si può tornare a 210.000 e alzare di nuovo
+ * l'asticella. Vedi il README.
+ */
+const ITERAZIONI_PREDEFINITE = 8_000
+
+/**
+ * Oltre questa soglia si rifiuta di verificare.
+ *
+ * Un'impronta creata prima di questo cambiamento chiede 210.000 iterazioni, e
+ * tentare di verificarla farebbe morire il Worker con un 500 dal corpo vuoto —
+ * illeggibile per chi sta solo provando a entrare. Meglio dire chiaramente che va
+ * rigenerata.
+ */
+const ITERAZIONI_MASSIME = 20_000
 const DURATA_SESSIONE_MS = 12 * 60 * 60 * 1000 // 12 ore
 export const COOKIE_SESSIONE = 'sm_console'
 
@@ -89,6 +122,8 @@ export async function passwordCorretta(password: string, memorizzato: string): P
   const [iterazioniTesto, saltTesto, hashAtteso] = parti as [string, string, string]
   const iterazioni = Number.parseInt(iterazioniTesto, 10)
   if (!Number.isFinite(iterazioni) || iterazioni < 1000) return false
+  // Non si prova nemmeno: eccederebbe la CPU e il Worker morirebbe a metà.
+  if (iterazioni > ITERAZIONI_MASSIME) return false
 
   const hash = await derivaPassword(password, daEsadecimale(saltTesto), iterazioni)
   return ugualiATempoCostante(hash, hashAtteso)
@@ -161,7 +196,9 @@ function formaImprontaValida(impronta: string): boolean {
   const parti = impronta.split(':')
   if (parti.length !== 3) return false
   const [iterazioni, salt, derivata] = parti as [string, string, string]
-  if (!/^\d+$/.test(iterazioni) || Number.parseInt(iterazioni, 10) < 1000) return false
+  if (!/^\d+$/.test(iterazioni)) return false
+  const numero = Number.parseInt(iterazioni, 10)
+  if (numero < 1000 || numero > ITERAZIONI_MASSIME) return false
   return /^[0-9a-f]{32}$/i.test(salt) && /^[0-9a-f]{64}$/i.test(derivata)
 }
 
@@ -200,10 +237,18 @@ export function diagnosiConsole(): string[] {
     problemi.push('ADMIN_PASSWORD_HASH non arriva al server (assente o vuota).')
   } else if (!formaImprontaValida(hash)) {
     const parti = hash.split(':')
+    const iterazioni = Number.parseInt(parti[0] ?? '', 10)
     if (parti.length !== 3) {
       problemi.push(
         'ADMIN_PASSWORD_HASH non ha la forma attesa «iterazioni:salt:impronta». ' +
           'Va incollato il valore prodotto da `npm run admin:password`, non la password.',
+      )
+    } else if (Number.isFinite(iterazioni) && iterazioni > ITERAZIONI_MASSIME) {
+      problemi.push(
+        `ADMIN_PASSWORD_HASH chiede ${iterazioni.toLocaleString('it-IT')} iterazioni: ` +
+          `troppe per i 10 ms di CPU di un Worker sul piano gratuito, che verrebbe ` +
+          `interrotto a metà. È un'impronta creata prima del limite: la rigeneri con ` +
+          '`npm run admin:password` e la reimposti.',
       )
     } else {
       const salt = parti[1] ?? ''

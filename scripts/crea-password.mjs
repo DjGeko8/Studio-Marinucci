@@ -18,7 +18,10 @@ import { createInterface } from 'node:readline/promises'
 import { writeFile } from 'node:fs/promises'
 import { stdin, stdout } from 'node:process'
 
-const ITERAZIONI = 210_000
+// Deve corrispondere a ITERAZIONI_PREDEFINITE in lib/admin/auth.ts.
+// Ottomila e' il massimo che sta nei 10 ms di CPU di un Worker sul piano gratuito;
+// la robustezza viene dalla lunghezza della password, non dalle iterazioni.
+const ITERAZIONI = 8_000
 
 function esadecimale(buffer) {
   return [...new Uint8Array(buffer)].map((b) => b.toString(16).padStart(2, '0')).join('')
@@ -74,11 +77,13 @@ if (temporanee) {
     console.error('\n✗ Email non valida.')
     process.exit(1)
   }
-  if (password.length < 12) {
+  if (password.length < 16) {
     console.error(
-      '\n✗ Password troppo corta: almeno 12 caratteri.' +
-        '\n  È l’unica cosa che protegge la console: una lunga e inventata sul momento' +
-        '\n  vale più di una corta e complicata.',
+      '\n✗ Password troppo corta: almeno 16 caratteri.' +
+        '\n  Le iterazioni di PBKDF2 sono per forza poche (10 ms di CPU sui Worker del' +
+        '\n  piano gratuito), quindi la robustezza deve venire dalla lunghezza.' +
+        '\n  Una frase lunga inventata sul momento vale più di una corta e complicata;' +
+        '\n  in alternativa `--temporanee` ne genera una casuale di 24 caratteri.',
     )
     process.exit(1)
   }
